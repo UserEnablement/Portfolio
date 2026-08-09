@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 01 — Getting Started</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2761;
+    --navy:#0B1230;
+    --paper:#F6F8FC;
+    --surface:#FFFFFF;
+    --muted:#667085;
+    --line:#E1E6F0;
+
+    --teal:#028090;      --teal-soft:#D7F5EF;
+    --blue:#1B6FA8;      --blue-soft:#D6EAF8;
+    --amber:#C07000;     --amber-soft:#FEF3CD;
+    --peri:#5A63C4;      --peri-soft:#EEF2FB;
+    --mint:#00A896;
+
+    --radius:16px;
+    --radius-sm:12px;
+    --shadow: 0 12px 32px rgba(11,18,48,.10);
+
+    --display:"Sora", sans-serif;
+    --body:"Inter", -apple-system, sans-serif;
+    --mono:"JetBrains Mono", monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased;}
+  a{color:var(--blue);}
+  button{font-family:inherit;}
+
+  .layout{max-width:1180px; margin:0 auto; padding:0 24px 40px; display:grid; grid-template-columns:1fr 320px; gap:28px; align-items:start;}
+  @media (max-width:960px){ .layout{grid-template-columns:1fr;} }
+
+  /* ---------- topbar ---------- */
+  .topbar{position:sticky; top:0; z-index:60; background:rgba(246,248,252,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .topbar-inner{max-width:1180px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .brand{font-family:var(--display); font-weight:700; font-size:1.02rem; display:flex; align-items:baseline; gap:10px; color:var(--ink);}
+  .brand small{font-family:var(--mono); font-weight:400; font-size:.66rem; letter-spacing:.05em; color:var(--muted); text-transform:uppercase;}
+  .progress-wrap{flex:1; min-width:160px; max-width:340px;}
+  .progress-track{height:6px; border-radius:20px; background:var(--line); overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:var(--teal); transition:width .35s ease;}
+  .progress-label{font-family:var(--mono); font-size:.62rem; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:.04em;}
+
+  /* ---------- hero ---------- */
+  .hero{background:var(--navy); color:#fff; padding:56px 0 40px; margin-bottom:8px; position:relative; overflow:hidden;}
+  .hero::before{content:""; position:absolute; top:-120px; right:-120px; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle at 30% 30%, rgba(0,168,150,.32), transparent 70%);}
+  .hero::after{content:""; position:absolute; bottom:-140px; left:-100px; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle at 60% 40%, rgba(27,111,168,.32), transparent 70%);}
+  .hero-inner{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 24px;}
+  .kicker{font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mint); display:flex; align-items:center; gap:10px; margin:0 0 16px;}
+  .kicker::before{content:""; width:24px; height:2px; background:var(--mint);}
+  h1{font-family:var(--display); font-weight:700; font-size:clamp(1.6rem,3.2vw,2.25rem); line-height:1.2; margin:0 0 14px; color:#fff; max-width:26ch;}
+  .lede{font-size:.98rem; color:#C7CDE8; max-width:62ch; margin:0 0 22px;}
+
+  .call-strip{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px;}
+  .call-card{display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:var(--radius-sm); padding:12px 16px; text-decoration:none; color:#fff; transition:transform .12s, box-shadow .15s, background .15s;}
+  .call-card:hover{transform:translateY(-2px); background:rgba(255,255,255,.14);}
+  .call-icon{width:32px; height:32px; border-radius:50%; background:var(--mint); color:var(--navy); display:flex; align-items:center; justify-content:center; flex:none;}
+  .call-icon svg{width:15px; height:15px;}
+  .call-txt .lbl{font-family:var(--mono); font-size:.58rem; text-transform:uppercase; letter-spacing:.05em; color:#C7CDE8; display:block;}
+  .call-txt .ttl{font-family:var(--display); font-weight:700; font-size:.88rem;}
+
+  .meta-row{display:flex; gap:22px; flex-wrap:wrap; font-size:.82rem; color:#C7CDE8;}
+  .meta-row b{color:#fff;}
+
+  /* ---------- sections ---------- */
+  main{padding-top:8px;}
+  section{padding:30px 0; border-bottom:1px solid var(--line); scroll-margin-top:80px;}
+  section:last-of-type{border-bottom:none;}
+  .sec-head{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .sec-num{font-family:var(--mono); font-weight:700; font-size:.66rem; color:#fff; border-radius:20px; padding:3px 11px; background:var(--ink); letter-spacing:.04em; text-transform:uppercase;}
+  .sec-head h2{font-family:var(--display); font-weight:700; font-size:1.22rem; margin:0; color:var(--ink);}
+  .sec-time{margin-left:auto; font-family:var(--mono); font-size:.66rem; color:var(--muted);}
+
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; box-shadow:0 3px 10px rgba(11,18,48,.05);}
+  .panel + .panel{margin-top:14px;}
+
+  .obj-list{list-style:none; margin:0; padding:0; display:grid; gap:10px;}
+  .obj-list li{display:flex; gap:10px; align-items:flex-start; font-size:.9rem;}
+  .obj-list .num{font-family:var(--mono); font-weight:700; font-size:.7rem; color:#fff; background:var(--teal); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex:none; margin-top:1px;}
+
+  .action-btn{display:inline-flex; align-items:center; gap:8px; background:var(--ink); color:#fff; font-weight:700; font-size:.83rem; text-decoration:none; padding:11px 20px; border-radius:24px; border:none; cursor:pointer; transition:transform .12s, box-shadow .15s;}
+  .action-btn:hover{transform:translateY(-1px); box-shadow:var(--shadow);}
+  .action-btn.ghost{background:var(--surface); color:var(--ink); border:1.5px solid var(--line);}
+  .action-btn.gold{background:var(--peri);}
+  .action-btn.teal{background:var(--teal);}
+
+  .info-note{
+    font-size:.84rem; color:#2b333c; background:var(--blue-soft); border:1px solid var(--blue); border-radius:12px;
+    padding:14px 16px; margin-bottom:18px; display:flex; gap:10px; align-items:flex-start;
+  }
+  .info-note b{display:block; font-family:var(--mono); font-size:.62rem; text-transform:uppercase; letter-spacing:.05em; color:var(--blue); margin-bottom:3px;}
+
+  /* apply section task cards */
+  .task-card{border:1px solid var(--line); border-radius:var(--radius-sm); padding:16px 18px; background:var(--surface); margin-bottom:12px; transition:border-color .15s, box-shadow .15s;}
+  .task-card:last-child{margin-bottom:0;}
+  .task-card.checked{border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset;}
+  .task-top{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+  .task-check{width:22px; height:22px; border:2px solid var(--teal); border-radius:6px; flex:none; cursor:pointer; display:flex; align-items:center; justify-content:center; background:var(--surface);}
+  .task-check.checked{background:var(--teal);}
+  .task-check.checked::after{content:"✓"; color:#fff; font-size:.78rem; font-weight:700;}
+  .task-title{font-weight:700; font-size:.92rem;}
+  .task-obj{font-family:var(--mono); font-size:.62rem; color:var(--teal); background:var(--teal-soft); border-radius:20px; padding:2px 9px; margin-left:auto;}
+  .task-fields{display:grid; gap:8px; margin-top:8px; padding-left:32px;}
+  .task-fields label{font-size:.74rem; color:var(--muted); display:block; margin-bottom:3px;}
+  .task-fields input[type=text]{width:100%; border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-family:var(--body); font-size:.85rem; background:var(--paper);}
+
+  /* observations */
+  .obs-grid{display:grid; gap:12px;}
+  .obs-grid label{font-size:.82rem; font-weight:600; color:var(--ink); display:block; margin-bottom:5px;}
+  .obs-grid textarea{width:100%; min-height:56px; border:1px solid var(--line); border-radius:10px; padding:9px 12px; font-family:var(--body); font-size:.87rem; background:var(--paper); resize:vertical;}
+
+  /* close / stamp */
+  .close-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:28px; text-align:center; box-shadow:0 3px 10px rgba(11,18,48,.05);}
+  .stamp{display:inline-block; font-family:var(--mono); font-weight:700; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:#A23E2E; border:3px solid #A23E2E; border-radius:4px; padding:8px 18px; margin-bottom:16px; transform:rotate(-3deg);}
+  .stamp.done{color:var(--teal); border-color:var(--teal); transform:rotate(-3deg);}
+
+  footer{padding:36px 0 20px; text-align:center;}
+  footer .fine{font-size:.72rem; color:var(--muted);}
+
+  /* ---------- sidebar case file / checklist ---------- */
+  .sidebar{position:sticky; top:80px; align-self:start;}
+  .file-tab{background:var(--ink); color:#fff; font-family:var(--mono); font-weight:600; font-size:.62rem; letter-spacing:.06em; text-transform:uppercase; padding:6px 14px; border-radius:10px 10px 0 0; display:inline-block; margin-left:14px;}
+  .file{background:var(--surface); border:1px solid var(--line); border-radius:4px 16px 16px 16px; box-shadow:var(--shadow); padding:18px 18px 20px;}
+  .file-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
+  .file-head h3{font-family:var(--display); font-weight:700; font-size:1rem; margin:0; color:var(--ink);}
+  .file-head span{font-family:var(--mono); font-size:.62rem; color:var(--muted);}
+
+  .checklist{list-style:none; margin:0 0 12px; padding:0; display:grid; gap:8px;}
+  .checklist li{display:flex; align-items:flex-start; gap:10px; padding:9px 10px; border:1px solid var(--line); border-radius:10px; background:var(--paper); transition:background .15s, border-color .15s;}
+  .checklist li.done{background:var(--teal-soft); border-color:var(--teal);}
+  .checklist .ci{width:18px; height:18px; border-radius:5px; border:2px solid var(--teal); flex:none; margin-top:1px; display:flex; align-items:center; justify-content:center; background:var(--surface);}
+  .checklist li.done .ci{background:var(--teal);}
+  .checklist li.done .ci::after{content:"✓"; color:#fff; font-size:.64rem; font-weight:700;}
+  .checklist .ct{font-size:.78rem; color:var(--ink); line-height:1.4;}
+  .checklist li.done .ct{color:var(--ink); font-weight:600;}
+  .checklist .cnote{display:block; font-size:.68rem; color:var(--muted); margin-top:2px; overflow-wrap:anywhere;}
+
+  .file-status{display:flex; align-items:center; gap:6px; font-size:.76rem; margin:2px 0 14px; color:var(--muted);}
+  .file-status .dot{width:8px; height:8px; border-radius:50%; background:var(--line); flex:none;}
+  .file-status.on .dot{background:var(--teal);}
+
+  .file-download{width:100%; margin-top:2px;}
+  .file-hint{font-size:.68rem; color:var(--muted); text-align:center; margin-top:8px;}
+
+  @media (max-width:960px){ .sidebar{position:relative; top:0;} }
+
+  @media print{ .topbar,.call-strip,.sidebar,.action-btn{display:none !important;} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">GETTING STARTED <small>Training Series</small></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 6 tasks logged</div>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Module 01 · Getting Started</p>
+    <h1>Learn the basics of logging in, choosing a plan, navigating the dashboard, and finding support.</h1>
+    <p class="lede">This module walks new plan administrators through their first steps in the system — from login to logout — while you build a Case File documenting what you find along the way.</p>
+
+    <div class="call-strip">
+      <a class="call-card" href="https://userenablement.github.io/Product/IncomingCall/" target="_blank" rel="noopener">
+        <span class="call-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M4 4l12 6-12 6V4z" fill="currentColor"/></svg></span>
+        <span class="call-txt"><span class="lbl">Kickoff call</span><span class="ttl">Start with Olive ↗</span></span>
+      </a>
+    </div>
+
+    <div class="meta-row">
+      <span><b>Audience:</b> New plan administrators, no prior experience</span>
+      <span><b>Prerequisites:</b> None — first module in the series</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <main>
+    <!-- OPENING -->
+    <section id="opening">
+      <div class="sec-head"><span class="sec-num">Opening</span><h2>Before you begin</h2><span class="sec-time">~2 min</span></div>
+      <div class="panel">
+        <p style="margin-top:0;">Start with the practice activity, then complete the tasks in the live system. Use the guide as your reference whenever you need a reminder.</p>
+        <p style="margin-bottom:0; font-weight:700;">By the end of this module, you will be able to:</p>
+        <ul class="obj-list" style="margin-top:12px;">
+          <li><span class="num">1</span><span>Log in using your credentials.</span></li>
+          <li><span class="num">2</span><span>Select the correct plan if more than one plan is available.</span></li>
+          <li><span class="num">3</span><span>Identify the main areas of the dashboard.</span></li>
+          <li><span class="num">4</span><span>Open the Task List and Help menu.</span></li>
+          <li><span class="num">5</span><span>Access Documentation and Send Feedback.</span></li>
+          <li><span class="num">6</span><span>Change your password and review Account Settings.</span></li>
+          <li><span class="num">7</span><span>Log out securely when finished.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section id="practice">
+      <div class="sec-head"><span class="sec-num">Step 1</span><h2>Practice</h2><span class="sec-time">~5–6 min</span></div>
+      <div class="panel">
+        <p style="margin-top:0;">Use the simulation to practice the steps before you try them in the live system. You'll be prompted to log in, select a plan, open Help, and review the dashboard.</p>
+        <a class="action-btn" href="https://userenablement.github.io/Product/Admin01GettingStarted/" target="_blank" rel="noopener">Start the practice activity ↗</a>
+      </div>
+    </section>
+
+    <!-- APPLY -->
+    <section id="apply">
+      <div class="sec-head"><span class="sec-num">Step 2</span><h2>Apply — Live System Tasks</h2><span class="sec-time">~8–10 min</span></div>
+      <p style="color:var(--muted); font-size:.88rem; margin-top:0;">Complete each task in the real environment, check it off, and record what you find. Checking a task off here checks it off in your Case File too.</p>
+
+      <div class="info-note">
+        <span>
+          <b>Before you start</b>
+          You'll complete these tasks in the training environment provided for this course. Don't currently have access? Contact IT to get set up before starting this section.
+        </span>
+      </div>
+
+      <div class="task-card" data-task="1">
+        <div class="task-top"><button class="task-check" data-check="1"></button><span class="task-title">Log in</span><span class="task-obj">Obj. 1</span></div>
+        <div class="task-fields">
+          <div><label>Client code used</label><input type="text" data-field="clientCode" placeholder="e.g. OLV-1042"></div>
+          <div><label>Username used</label><input type="text" data-field="username" placeholder="Your login username"></div>
+          <div><label>Was plan selection required after login?</label><input type="text" data-field="planSelectionRequired" placeholder="Yes / No"></div>
+        </div>
+      </div>
+
+      <div class="task-card" data-task="2">
+        <div class="task-top"><button class="task-check" data-check="2"></button><span class="task-title">Confirm the correct plan</span><span class="task-obj">Obj. 2</span></div>
+        <div class="task-fields">
+          <div><label>Plan name selected</label><input type="text" data-field="planName" placeholder="Plan name"></div>
+          <div><label>Number of plans available on your account</label><input type="text" data-field="planCount" placeholder="e.g. 2"></div>
+        </div>
+      </div>
+
+      <div class="task-card" data-task="3">
+        <div class="task-top"><button class="task-check" data-check="3"></button><span class="task-title">Find the dashboard &amp; open the Task List</span><span class="task-obj">Obj. 3, 4</span></div>
+        <div class="task-fields">
+          <div><label>Three modules you'll likely use most</label><input type="text" data-field="topModules" placeholder="e.g. Enrollment, Billing, Reports"></div>
+          <div><label>One module you'd like to learn more about</label><input type="text" data-field="curiousModule" placeholder="Module name"></div>
+        </div>
+      </div>
+
+      <div class="task-card" data-task="4">
+        <div class="task-top"><button class="task-check" data-check="4"></button><span class="task-title">Open Help &gt; Documentation</span><span class="task-obj">Obj. 4, 5</span></div>
+        <div class="task-fields">
+          <div><label>Help resource you expect to use most often</label><input type="text" data-field="helpResource" placeholder="e.g. Documentation site, Send Feedback"></div>
+        </div>
+      </div>
+
+      <div class="task-card" data-task="5">
+        <div class="task-top"><button class="task-check" data-check="5"></button><span class="task-title">Review Account Settings</span><span class="task-obj">Obj. 6</span></div>
+        <div class="task-fields">
+          <div><label>Current language preference</label><input type="text" data-field="language" placeholder="e.g. English (en)"></div>
+          <div><label>Notification settings available</label><input type="text" data-field="notifications" placeholder="e.g. Two-Factor Authentication"></div>
+          <div><label>Other settings you noticed</label><input type="text" data-field="otherSettings" placeholder="Anything else"></div>
+        </div>
+      </div>
+
+      <div class="task-card" data-task="6">
+        <div class="task-top"><button class="task-check" data-check="6"></button><span class="task-title">Log out</span><span class="task-obj">Obj. 7</span></div>
+        <div class="task-fields">
+          <div><label>Did the system return you to the login screen?</label><input type="text" data-field="loggedOutClean" placeholder="Yes / No"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBSERVATIONS -->
+    <section id="observations">
+      <div class="sec-head"><span class="sec-num">Reflect</span><h2>My Observations</h2></div>
+      <div class="panel obs-grid">
+        <div>
+          <label for="obs1">Today I discovered...</label>
+          <textarea id="obs1" data-field="obsDiscovered"></textarea>
+        </div>
+        <div>
+          <label for="obs2">Something that surprised me...</label>
+          <textarea id="obs2" data-field="obsSurprised"></textarea>
+        </div>
+        <div>
+          <label for="obs3">One thing I'd like to understand better...</label>
+          <textarea id="obs3" data-field="obsUnderstand"></textarea>
+        </div>
+        <div>
+          <label for="obs4">Open questions for my trainer or manager...</label>
+          <textarea id="obs4" data-field="obsQuestions"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAVE -->
+    <section id="save">
+      <div class="sec-head"><span class="sec-num">Step 3</span><h2>Save for Later</h2><span class="sec-time">~1 min</span></div>
+      <div class="panel">
+        <p style="margin-top:0;">Use the user guide as your step-by-step job aid when you need to revisit this process later.</p>
+        <button class="action-btn ghost" id="downloadGuideBtn">Download the user guide</button>
+      </div>
+    </section>
+
+    <!-- CLOSE -->
+    <section id="close">
+      <div class="sec-head"><span class="sec-num">Close</span><h2>Wrap-Up</h2></div>
+      <div class="close-card">
+        <span class="stamp" id="closeStamp">In Progress</span>
+        <p style="margin:0 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem;">Once you can complete the tasks above, you're ready for Module 02.</p>
+        <p style="margin:0 0 20px; color:var(--muted); font-size:.85rem;" id="closeSub">Complete all 6 tasks to unlock the wrap-up call and download your finished Case File.</p>
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <button class="action-btn gold" id="downloadCaseBtn">Download my Case File</button>
+          <a class="action-btn teal" id="endCallBtn" href="https://userenablement.github.io/Product/ClosingCall/" target="_blank" rel="noopener">Wrap up with Olive ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p class="fine">Module 01 of the onboarding series. Sample rebuild of a Sway-based lesson — Sway sequenced the video, simulation, workbook, and reference docs into one path; this page reproduces that flow without Sway.</p>
+    </footer>
+  </main>
+
+  <aside class="sidebar">
+    <span class="file-tab">Live Case File</span>
+    <div class="file">
+      <div class="file-head">
+        <h3>Getting Started</h3>
+        <span id="fileDate"></span>
+      </div>
+
+      <ul class="checklist" id="checklist"><!-- populated by JS --></ul>
+
+      <div class="file-status" id="fileStatus"><span class="dot"></span><span>0 of 6 tasks complete</span></div>
+
+      <button class="action-btn ghost file-download" id="sidebarDownloadBtn">Download Case File (.txt)</button>
+      <p class="file-hint">Tick a task in the lesson and it checks off here automatically.</p>
+    </div>
+  </aside>
+</div>
+
+<script>
+const TASKS = [
+  { n:1, title:"Log in", obj:"Obj. 1", fields:["clientCode","username","planSelectionRequired"] },
+  { n:2, title:"Confirm the correct plan", obj:"Obj. 2", fields:["planName","planCount"] },
+  { n:3, title:"Find the dashboard & open the Task List", obj:"Obj. 3, 4", fields:["topModules","curiousModule"] },
+  { n:4, title:"Open Help > Documentation", obj:"Obj. 4, 5", fields:["helpResource"] },
+  { n:5, title:"Review Account Settings", obj:"Obj. 6", fields:["language","notifications","otherSettings"] },
+  { n:6, title:"Log out", obj:"Obj. 7", fields:["loggedOutClean"] }
+];
+const FIELD_LABELS = {
+  clientCode:"Client code used", username:"Username used", planSelectionRequired:"Plan selection required after login",
+  planName:"Plan name selected", planCount:"Number of plans available",
+  topModules:"Three modules you'll likely use most", curiousModule:"Module to learn more about",
+  helpResource:"Help resource used most often",
+  language:"Current language preference", notifications:"Notification settings available", otherSettings:"Other settings noticed",
+  loggedOutClean:"Returned to login screen on sign out",
+  obsDiscovered:"Today I discovered", obsSurprised:"Something that surprised me", obsUnderstand:"One thing I'd like to understand better", obsQuestions:"Open questions for my trainer or manager"
+};
+
+const state = { fields:{}, checked:{1:false,2:false,3:false,4:false,5:false,6:false} };
+
+document.getElementById("fileDate").textContent = new Date().toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"});
+
+/* build sidebar checklist */
+const checklistEl = document.getElementById("checklist");
+TASKS.forEach(t=>{
+  const li = document.createElement("li");
+  li.dataset.task = t.n;
+  li.innerHTML = `<span class="ci"></span><span class="ct">Task ${t.n} · ${t.title}<span class="cnote" data-note="${t.n}"></span></span>`;
+  checklistEl.appendChild(li);
+});
+
+document.querySelectorAll("[data-field]").forEach(el=>{
+  el.addEventListener("input", ()=>{
+    state.fields[el.dataset.field] = el.value;
+    renderNotes();
+  });
+});
+
+function setTask(n, checked){
+  state.checked[n] = checked;
+  document.querySelector(`.task-check[data-check="${n}"]`).classList.toggle("checked", checked);
+  document.querySelector(`.task-card[data-task="${n}"]`).classList.toggle("checked", checked);
+  document.querySelector(`.checklist li[data-task="${n}"]`).classList.toggle("done", checked);
+  renderProgress();
+  renderClose();
+}
+
+document.querySelectorAll(".task-check").forEach(btn=>{
+  btn.addEventListener("click", ()=> setTask(btn.dataset.check, !state.checked[btn.dataset.check]));
+});
+/* clicking the sidebar checklist item toggles the same task */
+checklistEl.addEventListener("click", (e)=>{
+  const li = e.target.closest("li[data-task]");
+  if (!li) return;
+  const n = li.dataset.task;
+  setTask(n, !state.checked[n]);
+});
+
+function renderNotes(){
+  TASKS.forEach(t=>{
+    const filled = t.fields.map(f=>(state.fields[f]||"").trim()).filter(Boolean);
+    const noteEl = document.querySelector(`.cnote[data-note="${t.n}"]`);
+    noteEl.textContent = filled.length ? filled.join(" · ") : "";
+  });
+}
+
+function renderProgress(){
+  const done = Object.values(state.checked).filter(Boolean).length;
+  document.getElementById("progressFill").style.width = (done/6*100) + "%";
+  document.getElementById("progressLabel").textContent = `${done} / 6 tasks logged`;
+  const statusEl = document.getElementById("fileStatus");
+  statusEl.classList.toggle("on", done === 6);
+  statusEl.querySelector("span:last-child").textContent = `${done} of 6 tasks complete`;
+}
+
+function renderClose(){
+  const done = Object.values(state.checked).filter(Boolean).length;
+  const stamp = document.getElementById("closeStamp");
+  const sub = document.getElementById("closeSub");
+  if (done === 6){
+    stamp.textContent = "Request Complete";
+    stamp.classList.add("done");
+    sub.textContent = "All tasks recorded. Download your finished Case File and wrap up with Olive.";
+  } else {
+    stamp.textContent = "In Progress";
+    stamp.classList.remove("done");
+    sub.textContent = "Complete all 6 tasks to unlock the wrap-up call and download your finished Case File.";
+  }
+}
+
+function buildCaseFileText(){
+  const lines = [];
+  lines.push("TRAINING SERIES");
+  lines.push("Module 01 · Getting Started · Case File");
+  lines.push("=".repeat(50));
+  lines.push("");
+  lines.push("SECTION 1 — ASSIGNMENT DETAILS");
+  lines.push(`Date: ${new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})}`);
+  lines.push("Module: 01 — Getting Started");
+  lines.push("Client: Not applicable — onboarding");
+  lines.push("");
+  lines.push("SECTION 2 — INVESTIGATION LOG");
+  TASKS.forEach(t=>{
+    lines.push(`Task ${t.n} ${state.checked[t.n] ? "[x]" : "[ ]"} — ${t.title}`);
+    t.fields.forEach(f=>{
+      lines.push(`  - ${FIELD_LABELS[f]}: ${(state.fields[f]||"").trim() || "(not recorded)"}`);
+    });
+  });
+  lines.push("");
+  lines.push("SECTION 3 — MY OBSERVATIONS");
+  ["obsDiscovered","obsSurprised","obsUnderstand"].forEach(f=>{
+    lines.push(`${FIELD_LABELS[f]}: ${(state.fields[f]||"").trim() || "(not recorded)"}`);
+  });
+  lines.push("");
+  lines.push("SECTION 4 — OPEN QUESTIONS");
+  lines.push((state.fields.obsQuestions||"").trim() || "(none recorded)");
+  lines.push("");
+  const doneCount = Object.values(state.checked).filter(Boolean).length;
+  lines.push("SECTION 5 — CASE STATUS");
+  lines.push(doneCount === 6 ? "Request Complete — all tasks recorded." : `In progress — ${doneCount} of 6 tasks recorded.`);
+  return lines.join("\n");
+}
+
+function downloadTextFile(filename, text){
+  const blob = new Blob([text], {type:"text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("sidebarDownloadBtn").addEventListener("click", ()=> downloadTextFile("Module01_GettingStarted_CaseFile.txt", buildCaseFileText()));
+document.getElementById("downloadCaseBtn").addEventListener("click", ()=> downloadTextFile("Module01_GettingStarted_CaseFile.txt", buildCaseFileText()));
+
+const USER_GUIDE_TEXT = `USER GUIDE
+1. Getting Started
+${"=".repeat(50)}
+
+This section covers everything you need to access the system and navigate it — from your first login to managing your account preferences.
+
+1.1 Logging In
+To log in:
+  1. Open your browser and navigate to your organization's login URL.
+  2. Enter your Client Code in the client code field.
+  3. Enter your Username in the username field.
+  4. Enter your Password in the password field.
+  5. Click Log In to access the system.
+
+1.2 Selecting a Plan
+Plans separate employers, members, and configurations within the system. If your account contains more than one plan, you are prompted to choose one before the Dashboard loads.
+To select a plan:
+  1. After logging in, click the Select a Plan dropdown.
+  2. Choose the appropriate plan from the list.
+
+1.3 The Dashboard
+After selecting a plan, you land on the Dashboard — your starting point for all plan activity (Navigation, Metrics, Activity).
+
+1.4 Using the Task List
+The Task List panel, accessible from the icon in the top-right corner of the screen, allows you to track and manage your personal work items. When no tasks are assigned to you, the panel displays a "You have no tasks!" message.
+To open the Task List:
+  1. Click the Task List icon in the top-right corner of any screen.
+  2. Review your current tasks in the panel.
+  3. Use the search field to filter tasks if needed.
+  4. Click the icon again to close the panel.
+
+1.5 Accessing Help and Documentation
+The system includes built-in access to help documentation and a feedback tool directly from the top navigation bar. These resources are available on every screen to support you as you work.
+
+1.5.1 The Documentation Site
+To access the Help documentation:
+  1. Click Help in the top-right navigation bar.
+  2. Select Documentation from the dropdown.
+When you click Documentation, you are taken to the Group Billing documentation site. This site is searchable and organized into topic areas such as Audit, Employers, Members, Plan Administration, and more.
+
+1.5.2 Submitting Feedback
+The Submit Feedback form allows you to send comments, suggestions, or translation issues directly to the support team.
+To submit feedback:
+  1. Click Help > Send Feedback.
+  2. Select a Feedback Type: General or Translation.
+  3. Enter a Subject and your Message.
+  4. Attach a file if needed.
+  5. Click Submit.
+
+1.6 Changing Your Password
+You can update your password at any time from the User Menu in the top-right corner of the screen. Keeping your password secure and up to date is important for protecting your account and your clients' data.
+Step 1 — Open the Change Password dialog:
+  1. Click your name in the top-right corner.
+  2. Select Change Password.
+Step 2 — Enter and save your new password:
+  1. Enter your Current Password.
+  2. Enter your New Password and confirm it.
+  3. Click Apply Changes.
+
+1.7 Account Settings
+The Account Settings area provides access to your personal account configuration options, including your language preference, two-factor authentication setup, and Super User Administration (if applicable).
+To open Account Settings:
+  1. Click your name in the top-right corner.
+  2. Select Account Settings.
+  3. Click any card to open that settings area.
+
+1.7.1 Client Profile
+The Client Profile card displays basic information about your organization as registered in the system, including client name, address, and contact details. This information is managed by the implementation team.
+To view your Client Profile:
+  1. Click the Client Profile card on the Account Settings page.
+  2. If you need to update editable fields, click Edit Client to open the Client Details form.
+
+1.7.2 SU Administration
+The SU Administration card is visible only to Super Users. It gives access to user account management, permission groups, and access controls across the plan. Regular administrators will not see this card.
+
+1.7.2a Reviewing Users
+To review existing users:
+  1. Click the SU Administration card to open the user management page.
+  2. Review active accounts on the Active Users tab.
+  3. Click the Terminated Users tab to view deactivated accounts.
+
+1.7.2b Adding a New User
+New users are created through the Add User form. Once created, they receive an email invitation to set up their password.
+To add a new user:
+  1. Click Add User to open the Add/Edit Users form.
+  2. Enter the required fields: Email, First Name, Last Name, and Effective Date.
+  3. Click Create to save the account.
+
+1.7.2c Configuring User Groups
+User groups control which modules each user can access and whether their access is read-only or read/write.
+To configure user groups:
+  1. Click Configure User Groups to open the groups panel.
+  2. Select an existing group to view or edit its permissions, or click Create New Group to define a new one.
+  3. In the Group Details form, enter the Group Name and Plan Type. Add an optional Group Description.
+  4. Select which modules the group can access and set each to Read Only or Read/Write. Click Save.
+  5. To assign a user to a group, click Assign Groups next to the user's name on the Active Users list.
+
+1.7.2d Viewing and Editing a Group
+To view and edit an existing group:
+  1. Click Configure User Groups to open the groups panel.
+  2. Select the group you want to review from the Group dropdown.
+  3. Click Edit Group to open the Group Details form.
+  4. Update the Group Name, Plan Type, or Group Description as needed.
+  5. Select or deselect the Include Module checkbox for each module, and set the Permission Level to Read-Only or Read-Write.
+  6. Click Save to apply your changes.
+
+1.7.2e Deleting a Group
+Before deleting, ensure no active users are assigned to the group, as deletion removes their access to any modules granted through it.
+To delete a user group:
+  1. Click Configure User Groups to open the groups panel.
+  2. Select the group you want to delete from the Group dropdown.
+  3. Click Delete Group. A confirmation dialog appears.
+  4. Click OK to permanently delete the group, or Cancel to return without making changes.
+
+1.7.3 Language Preference
+The Language Preference card lets you switch the interface language between English and French.
+To change your language preference:
+  1. Click the Language Preference card.
+  2. Select English (en) or Français (fr-ca) from the dropdown.
+  3. Click Save to apply your selection.
+
+1.7.4 Two-Factor Authentication
+The Two-Factor Authentication (2FA) card adds an extra layer of security to your login.
+To enable Two-Factor Authentication:
+  1. Click the Two-Factor Authentication card.
+  2. Toggle Enable Two-Factor Authentication to Yes.
+  3. Click Apply Changes to save your setting.
+
+1.8 Logging Out
+When you have finished working in the system, always log out to protect your account and your clients' data.
+To log out:
+  1. Click your name in the top-right corner of any screen.
+  2. Select Log Out from the dropdown menu.
+`;
+
+document.getElementById("downloadGuideBtn").addEventListener("click", ()=> downloadTextFile("UserGuide_Module01.txt", USER_GUIDE_TEXT));
+
+renderNotes();
+renderProgress();
+renderClose();
+</script>
+</body>
+</html>
