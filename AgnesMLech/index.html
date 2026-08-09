@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agnes M. Lech — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2761;
+    --navy:#0B1230;
+    --paper:#F6F8FC;
+    --surface:#FFFFFF;
+    --muted:#667085;
+    --line:#E1E6F0;
+
+    --teal:#028090;      --teal-soft:#D7F5EF;
+    --blue:#1B6FA8;      --blue-soft:#D6EAF8;
+    --amber:#C07000;     --amber-soft:#FEF3CD;
+    --peri:#5A63C4;      --peri-soft:#EEF2FB;
+    --mint:#00A896;
+
+    --radius:18px;
+    --radius-sm:12px;
+    --shadow: 0 12px 32px rgba(11,18,48,.10);
+
+    --display:"Sora", sans-serif;
+    --body:"Inter", -apple-system, sans-serif;
+    --mono:"JetBrains Mono", monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased;}
+  a{color:var(--blue);}
+  .wrap{max-width:960px; margin:0 auto; padding:0 28px;}
+
+  /* ---------- hero ---------- */
+  .hero{background:var(--navy); color:#fff; padding:72px 0 56px; position:relative; overflow:hidden;}
+  .hero::before{
+    content:""; position:absolute; top:-120px; right:-120px; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, rgba(0,168,150,.35), transparent 70%);
+  }
+  .hero::after{
+    content:""; position:absolute; bottom:-160px; left:-100px; width:360px; height:360px; border-radius:50%;
+    background:radial-gradient(circle at 60% 40%, rgba(27,111,168,.35), transparent 70%);
+  }
+  .hero-inner{position:relative; z-index:1;}
+  .kicker{font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mint); display:flex; align-items:center; gap:10px; margin:0 0 20px;}
+  .kicker::before{content:""; width:26px; height:2px; background:var(--mint); display:inline-block;}
+  .hero h1{font-family:var(--display); font-weight:700; font-size:clamp(1.9rem, 4vw, 2.7rem); line-height:1.18; margin:0 0 18px; max-width:20ch; color:#fff;}
+  .hero p{font-size:1.02rem; color:#C7CDE8; max-width:58ch; margin:0 0 26px;}
+  .hero-contact{display:flex; flex-wrap:wrap; gap:10px;}
+  .hero-pill{display:flex; align-items:center; gap:7px; font-size:.78rem; color:#fff; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:20px; padding:8px 14px;}
+  .hero-pill a{color:#fff;}
+
+  /* ---------- sections ---------- */
+  section{padding:52px 0;}
+  .section-head{margin-bottom:26px;}
+  .section-head .eyebrow{font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 8px;}
+  .section-head h2{font-family:var(--display); font-weight:700; font-size:1.5rem; margin:0 0 6px; color:var(--ink);}
+  .section-head p{font-size:.86rem; color:var(--muted); margin:0; max-width:54ch;}
+
+  /* ---------- quote cloud ---------- */
+  .quote-cloud{display:flex; flex-wrap:wrap; align-items:center; gap:10px 12px;}
+  .quote-chip{font-family:var(--display); font-weight:600; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:7px 16px; box-shadow:0 2px 8px rgba(11,18,48,.05);}
+  .quote-chip.big{font-size:1.15rem; padding:10px 20px;}
+  .quote-chip.med{font-size:.94rem;}
+  .quote-chip.sm{font-size:.78rem; font-weight:500; color:var(--muted); font-family:var(--body);}
+
+  /* ---------- work samples ---------- */
+  .card-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;}
+  @media (max-width:700px){.card-grid{grid-template-columns:1fr;}}
+  .sample-card{
+    display:block; text-decoration:none; border-radius:var(--radius); padding:22px 24px;
+    background:var(--tint); border:1px solid rgba(11,18,48,.06);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .sample-card:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
+  .sample-icon{
+    width:44px; height:44px; border-radius:12px; background:var(--dc); display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px; box-shadow:0 6px 14px rgba(11,18,48,.15);
+  }
+  .sample-icon svg{width:22px; height:22px; stroke:#fff;}
+  .sample-top{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .sample-tag{font-family:var(--mono); font-size:.62rem; text-transform:uppercase; letter-spacing:.04em; color:var(--dc); font-weight:700;}
+  .sample-arrow{color:var(--dc); font-size:1rem; font-weight:700;}
+  .sample-name{font-family:var(--display); font-weight:700; font-size:1.05rem; color:var(--ink); margin:10px 0 6px; display:block;}
+  .sample-desc{font-size:.83rem; color:var(--muted); line-height:1.55;}
+  .sample-links{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px;}
+  .sample-link{display:inline-flex; align-items:center; gap:4px; text-decoration:none; font-family:var(--mono); font-size:.66rem; font-weight:600; letter-spacing:.02em; color:var(--dc); background:var(--surface); border:1px solid rgba(11,18,48,.1); border-radius:20px; padding:5px 11px; transition:border-color .12s, transform .12s;}
+  .sample-link:hover{border-color:var(--dc); transform:translateY(-1px);}
+  .sample-link-soon{display:inline-flex; align-items:center; font-family:var(--mono); font-size:.66rem; letter-spacing:.02em; color:var(--muted); background:transparent; border:1px dashed var(--line); border-radius:20px; padding:5px 11px; opacity:.75;}
+
+  footer{padding:44px 0 60px; text-align:center;}
+  footer .fine{font-size:.72rem; color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap hero-inner">
+    <p class="kicker">Portfolio &amp; Work Samples</p>
+    <h1>The proof behind the bullet points.</h1>
+    <p>18 years of instructional design, leadership development, and learning enablement — here are the actual courses, tools, and feedback that back it up.</p>
+    <div class="hero-contact">
+      <span class="hero-pill">(226) 751-3084</span>
+      <span class="hero-pill"><a href="mailto:agnes.m.lech@gmail.com">agnes.m.lech@gmail.com</a></span>
+      <span class="hero-pill">Kitchener, ON</span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section id="feedback" class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">From live session feedback</p>
+    </div>
+    <div class="quote-cloud" id="quoteCloud"></div>
+  </section>
+
+  <section id="samples" class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Work Samples</p>
+      <h2>Click through — this isn't a description of the work, it's the work.</h2>
+    </div>
+    <div class="card-grid" id="sampleGrid"></div>
+  </section>
+
+  <footer class="wrap">
+    <p class="fine">Prototype — colour scheme pulled from the Module 2: Benefits &amp; Benefit Plans training deck.</p>
+  </footer>
+</main>
+
+<script>
+const DOMAINS = [
+  { id:"id", label:"Instructional Design", accent:"--blue", soft:"--blue-soft",
+    icon:`<path d="M4 6l8-3 8 3-8 3-8-3z" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 9.5V15c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V9.5" stroke-width="1.8"/>` },
+  { id:"lead", label:"Leadership Development", accent:"--teal", soft:"--teal-soft",
+    icon:`<circle cx="9" cy="8" r="2.6" stroke-width="1.8"/><circle cx="16" cy="9" r="2.1" stroke-width="1.8"/><path d="M3.5 18c.6-3 2.7-4.6 5.5-4.6s4.9 1.6 5.5 4.6" stroke-width="1.8" stroke-linecap="round"/><path d="M13.8 13.6c2.2.2 3.8 1.7 4.3 4.4" stroke-width="1.8" stroke-linecap="round"/>` },
+  { id:"ops", label:"Learning Enablement &amp; Ops", accent:"--amber", soft:"--amber-soft",
+    icon:`<circle cx="11" cy="11" r="2.6" stroke-width="1.8"/><path d="M11 3.5v2.2M11 16.3v2.2M18.5 11h-2.2M5.7 11H3.5M16.1 5.9l-1.5 1.5M6.9 15.1l-1.5 1.5M16.1 16.1l-1.5-1.5M6.9 6.9L5.4 5.4" stroke-width="1.8" stroke-linecap="round"/>` },
+  { id:"strat", label:"People &amp; Performance Strategy", accent:"--peri", soft:"--peri-soft",
+    icon:`<path d="M4 17V10M11 17V5M18 17v-8" stroke-width="2" stroke-linecap="round"/>` }
+];
+
+const TESTIMONIALS = [
+  { text:"Agnes was a great trainer", size:"big" },
+  { text:"outstanding performance as a facilitator", size:"big" },
+  { text:"a bright light in the organization", size:"med" },
+  { text:"very knowledgeable", size:"med" },
+  { text:"high energy", size:"med" },
+  { text:"great presenter", size:"med" },
+  { text:"made the session genuinely engaging", size:"med" },
+  { text:"a driving force behind the coaching program", size:"med" },
+  { text:"unwavering dedication and expertise", size:"sm" },
+  { text:"trainer was funny", size:"sm" },
+  { text:"lots of real-life material", size:"sm" },
+  { text:"great job", size:"sm" },
+  { text:"answered every question", size:"sm" },
+  { text:"made a remarkable difference", size:"sm" },
+  { text:"created a genuinely welcoming experience", size:"sm" },
+  { text:"insights and encouragement that mattered", size:"sm" }
+];
+
+const SAMPLES = [
+  { name:"Product Onboarding Simulation", domain:"id",
+    desc:"A click-through simulation walking new users through an admin platform — login, plan selection, dashboard, help docs, account settings — with contextual hints, narration, and guided hotspot testing so learners could practice navigation risk-free before touching the live system.",
+    links:[
+      { label:"Simulation", url:"https://userenablement.github.io/Product/Admin01GettingStarted/" }
+    ] },
+  { name:"ADKAR Leadership Initiative — Level 1 & 2", domain:"lead",
+    desc:"A two-level initiative helping leaders first understand the ADKAR change-management model, then apply it — including a branching decision scenario where leaders diagnose which ADKAR gap (Awareness, Desire, Knowledge, Ability, Reinforcement) is behind an employee's real underperformance, with distinct wrong-path consequences for each misdiagnosis.",
+    links:[
+      { label:"L1 Review", url:"https://userenablement.github.io/Sways/ADKAR1Review/" },
+      { label:"L1 Productive Struggle", url:"https://userenablement.github.io/Sways/ADKAR1ProductiveStruggle/" },
+      { label:"L2 Jordan Scenario", url:"https://userenablement.github.io/Sways/ADKAR2JordanScenario/" },
+      { label:"L2 What's Missing", url:"https://userenablement.github.io/Sways/ADKAR2WhatsMissing/" }
+    ] },
+  { name:"Performance & Probationary Review Tool", domain:"ops",
+    desc:"A lightweight review tool for leaders — 90-day probationary planning with check-ins, annual review cycles with objectives, and data export — built because no formal system existed at the time to support managers through onboarding and KPI tracking.",
+    links:[
+      { label:"Review Tool", url:"https://userenablement.github.io/Initiatives/PerformanceReview/" }
+    ] },
+  { name:"Pension Knowledge Initiative — Level 1 & 2", domain:"id",
+    desc:"A two-level interactive curriculum building insurance-industry pension knowledge — a pre-course diagnostic routes each learner to targeted review before advancing, and scenario exercises test judgment on real operational cases, like which collective agreement applies to a rate calculation.",
+    links:[
+      { label:"L2 Diagnostic", url:"https://userenablement.github.io/Sways/PensionL2Diagnostic/" },
+      { label:"L2 Rate Scenarios", url:"https://userenablement.github.io/Sways/PensionL2Rates/" }
+    ] },
+  { name:"Training Data Generator", domain:"ops",
+    desc:"A tool generating realistic names and sample data for learners to use during synchronous and asynchronous training sessions, removing the friction of learners having to invent placeholder information mid-exercise.",
+    links:[] },
+  { name:"Leadership 360 Profile Comparator", domain:"strat",
+    desc:"A survey-based tool comparing a leader's self-assessment against their team's evaluation of them, surfacing the gap between how leaders see themselves and how they're actually experienced by their teams.",
+    links:[
+      { label:"Profile Comparator", url:"https://userenablement.github.io/Initiatives/KFLeadershipProfile/" }
+    ] },
+  { name:"Remote Onboarding Framework", domain:"ops",
+    desc:"A full-lifecycle onboarding system for a fully remote organization — pre-boarding through 90-day review — built around a five-need psychological model rather than a task checklist, with role-specific stakeholder checklists, a Buddy/Guide peer-support structure, two longitudinal pulse surveys, and a dashboard design turning survey data into a prioritized action list.",
+    links:[
+      { label:"Read the case study", url:"onboarding-framework.html" }
+    ] }
+];
+
+/* quote cloud */
+const quoteCloud = document.getElementById("quoteCloud");
+TESTIMONIALS.forEach(t=>{
+  const span = document.createElement("span");
+  span.className = `quote-chip ${t.size}`;
+  span.textContent = `“${t.text}”`;
+  quoteCloud.appendChild(span);
+});
+
+/* work samples */
+const sampleGrid = document.getElementById("sampleGrid");
+SAMPLES.forEach(s=>{
+  const d = DOMAINS.find(x=>x.id===s.domain);
+  const el = document.createElement("div");
+  el.className = "sample-card";
+  el.style.setProperty("--dc", `var(${d.accent})`);
+  el.style.setProperty("--tint", `var(${d.soft})`);
+  const linksHtml = s.links.length
+    ? s.links.map(l=>`<a class="sample-link" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join("")
+    : `<span class="sample-link-soon">Preview soon</span>`;
+  el.innerHTML = `
+    <div class="sample-icon"><svg viewBox="0 0 22 22" fill="none" stroke-linecap="round" stroke-linejoin="round">${d.icon}</svg></div>
+    <div class="sample-top">
+      <span class="sample-tag">${d.label}</span>
+    </div>
+    <span class="sample-name">${s.name}</span>
+    <span class="sample-desc">${s.desc}</span>
+    <div class="sample-links">${linksHtml}</div>`;
+  sampleGrid.appendChild(el);
+});
+
+</script>
+</body>
+</html>
