@@ -70,6 +70,13 @@
   .quote-chip.med{font-size:.94rem;}
   .quote-chip.sm{font-size:.78rem; font-weight:500; color:var(--muted); font-family:var(--body);}
 
+  /* ---------- category sections ---------- */
+  .category{padding:34px 0;}
+  .category:not(:last-child){border-bottom:1px solid var(--line);}
+  .category-head{margin-bottom:22px; max-width:64ch;}
+  .category-head h3{font-family:var(--display); font-weight:700; font-size:1.22rem; margin:0 0 6px; color:var(--ink);}
+  .category-head p{font-size:.86rem; color:var(--muted); margin:0;}
+
   /* ---------- work samples ---------- */
   .card-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;}
   @media (max-width:700px){.card-grid{grid-template-columns:1fr;}}
@@ -79,6 +86,14 @@
     transition:transform .15s, box-shadow .15s;
   }
   .sample-card:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
+  .sample-card.featured{grid-column:1 / -1; padding:26px 30px; border:1px solid rgba(11,18,48,.1); box-shadow:0 6px 20px rgba(11,18,48,.06);}
+  .sample-card.featured .sample-name{font-size:1.2rem;}
+  .sample-card.featured .cco{max-width:80ch;}
+  .featured-badge{display:inline-block; font-family:var(--mono); font-size:.6rem; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:#fff; background:var(--dc); border-radius:20px; padding:3px 10px; margin-bottom:10px;}
+  .cco{font-size:.83rem; color:var(--ink); line-height:1.55; display:flex; flex-direction:column; gap:5px;}
+  .cco b{font-family:var(--display); font-weight:700; color:var(--dc);}
+  .coming-soon-card{opacity:.8; border-style:dashed; border-width:1.5px; box-shadow:none;}
+  .coming-soon-card:hover{transform:none; box-shadow:none;}
   .sample-icon{
     width:44px; height:44px; border-radius:12px; background:var(--dc); display:flex; align-items:center; justify-content:center;
     margin-bottom:16px; box-shadow:0 6px 14px rgba(11,18,48,.15);
@@ -111,8 +126,8 @@
 <div class="hero">
   <div class="wrap hero-inner">
     <p class="kicker">Portfolio &amp; Work Samples</p>
-    <h1>The proof behind the bullet points.</h1>
-    <p>18 years of instructional design, leadership development, and learning enablement — here are the actual courses, tools, and feedback that back it up.</p>
+    <h1>Helping people grow, perform, and succeed.</h1>
+    <p>Designing practical experiences that help people learn, improve, and do their best work — here are the actual courses, tools, and feedback that back it up.</p>
     <div class="hero-contact">
       <span class="hero-pill">(226) 751-3084</span>
       <span class="hero-pill"><a href="mailto:agnes.m.lech@gmail.com">agnes.m.lech@gmail.com</a></span>
@@ -134,7 +149,7 @@
       <p class="eyebrow">Work Samples</p>
       <h2>Click through — this isn't a description of the work, it's the work.</h2>
     </div>
-    <div class="card-grid" id="sampleGrid"></div>
+    <div id="categoryList"></div>
   </section>
 
   <footer class="wrap">
@@ -178,49 +193,100 @@ const TESTIMONIALS = [
   { text:"insights and encouragement that mattered", size:"sm" }
 ];
 
+const CATEGORIES = [
+  { id:"product", label:"Product Training", intro:"Hands-on simulations and platform sessions that let people practice safely before working in the live system." },
+  { id:"leadership", label:"Leadership Development", intro:"Creating tools and learning experiences that help leaders reflect, communicate, and support stronger performance." },
+  { id:"elearning", label:"eLearning Courses", intro:"Self-paced, scenario-based courses that build knowledge and judgment, not just completion." },
+  { id:"change", label:"Change Management", intro:"Helping people understand, adopt, and sustain new behaviors, systems, and ways of working." },
+  { id:"sync", label:"Synchronous Sessions", intro:"Live, facilitator-led sessions built around practice and real application, not just delivery." },
+  { id:"resources", label:"Participant Materials", intro:"Quick-reference job aids that give people the answer mid-task, not a full course." }
+];
+
 const SAMPLES = [
-  { name:"Product Onboarding Simulation", domain:"id",
-    desc:"A click-through simulation walking new users through an admin platform — login, plan selection, dashboard, help docs, account settings — with contextual hints, narration, and guided hotspot testing so learners could practice navigation risk-free before touching the live system.",
+  { name:"Product Onboarding Simulation", domain:"id", category:"product",
+    cco:{ challenge:"New users faced a live admin platform with no safe way to practice before real accounts were on the line.",
+      contribution:"Built a click-through simulation of login, plan selection, dashboard, and settings with contextual hints and guided hotspot testing.",
+      outcome:"Learners could rehearse the full flow risk-free before ever touching the live system." },
     links:[
       { label:"Simulation", url:"https://userenablement.github.io/Product/Admin01GettingStarted/" },
       { label:"Full Course", url:"https://userenablement.github.io/Portfolio/GettingStarted/" }
     ] },
-  { name:"ADKAR Leadership Initiative — Level 1 & 2", domain:"lead",
-    desc:"A two-level initiative helping leaders first understand the ADKAR change-management model, then apply it — including a branching decision scenario where leaders diagnose which ADKAR gap (Awareness, Desire, Knowledge, Ability, Reinforcement) is behind an employee's real underperformance, with distinct wrong-path consequences for each misdiagnosis.",
+  { name:"Group Benefits Client Onboarding — Session 1", domain:"id", category:"product",
+    cco:{ challenge:"New Benefits Administrators needed to go from first login to correctly building a live plan entry, inside a platform too complex to learn by trial and error.",
+      contribution:"Designed a 90-minute facilitator-led session — live platform demo, benefit-model concepts, and one full hands-on build — set inside a persona-based workplace simulation, with a complete facilitator script and 28-slide deck.",
+      outcome:"Learners leave the session having correctly built their first live entry, not just watched one demonstrated." },
+    links:[
+      { label:"Facilitator Guide", url:"https://userenablement.github.io/Portfolio/ClientPlatformTraining/" }
+    ] },
+  { name:"ADKAR Leadership Initiative — Level 1 & 2", domain:"lead", category:"elearning", featured:true,
+    cco:{ challenge:"Leaders understood change-management theory but struggled to diagnose which part of the ADKAR model was actually behind a specific employee's underperformance.",
+      contribution:"Designed a two-level initiative moving from concept to application, including a branching decision scenario where leaders diagnose a real underperformance case, with distinct wrong-path consequences for each misdiagnosis.",
+      outcome:"Part of a broader leadership development program that lifted leadership feedback scores 43%." },
     links:[
       { label:"L1 Review", url:"https://userenablement.github.io/Sways/ADKAR1Review/" },
       { label:"L1 Productive Struggle", url:"https://userenablement.github.io/Sways/ADKAR1ProductiveStruggle/" },
       { label:"L2 Jordan Scenario", url:"https://userenablement.github.io/Sways/ADKAR2JordanScenario/" },
       { label:"L2 What's Missing", url:"https://userenablement.github.io/Sways/ADKAR2WhatsMissing/" }
     ] },
-  { name:"Performance & Probationary Review Tool", domain:"ops",
-    desc:"A lightweight review tool for leaders — 90-day probationary planning with check-ins, annual review cycles with objectives, and data export — built because no formal system existed at the time to support managers through onboarding and KPI tracking.",
+  { name:"Executive Briefing: Redesigning Onboarding", domain:"lead", category:"change",
+    cco:{ challenge:"Senior leaders needed to understand — and buy into — a full onboarding redesign, not just see a list of deliverables.",
+      contribution:"Built a narrative, chapter-based executive presentation following a fictional new hire from pre-boarding through six months, tying each stage back to what changed and why it mattered.",
+      outcome:"Gave leadership a story-led case for the onboarding investment, framed around the new-hire experience rather than process diagrams." },
+    links:[
+      { label:"View Presentation", url:"https://userenablement.github.io/Portfolio/OnboardingPresentation/" }
+    ] },
+  { name:"Performance & Probationary Review Tool", domain:"ops", category:"leadership",
+    cco:{ challenge:"No formal system existed to help managers structure onboarding check-ins or track probationary and annual review cycles.",
+      contribution:"Built a lightweight review tool covering 90-day probationary planning, annual review cycles with objectives, and data export.",
+      outcome:"Gave managers a consistent, low-friction way to track new-hire and annual performance milestones." },
     links:[
       { label:"Review Tool", url:"https://userenablement.github.io/Initiatives/PerformanceReview/" }
     ] },
-  { name:"Pension Knowledge Initiative — Level 1 & 2", domain:"id",
-    desc:"A two-level interactive curriculum building insurance-industry pension knowledge — a pre-course diagnostic routes each learner to targeted review before advancing, and scenario exercises test judgment on real operational cases, like which collective agreement applies to a rate calculation.",
+  { name:"Pension Knowledge Initiative — Level 1 & 2", domain:"id", category:"elearning",
+    cco:{ challenge:"Insurance-industry pension rules are dense and error-prone when learners jump straight into edge cases.",
+      contribution:"Built a two-level curriculum with a pre-course diagnostic that routes each learner to targeted review, plus scenarios testing judgment on real cases like which collective agreement applies to a rate calculation.",
+      outcome:"Learners advance only once their specific knowledge gaps are closed, rather than sitting through content they already know." },
     links:[
       { label:"L2 Diagnostic", url:"https://userenablement.github.io/Sways/PensionL2Diagnostic/" },
       { label:"L2 Rate Scenarios", url:"https://userenablement.github.io/Sways/PensionL2Rates/" }
     ] },
-  { name:"Visual Job Aids & Reference Sheets", domain:"ops",
-    desc:"Quick-reference materials designed to answer a specific question fast — how to safely extend a formula-driven calculator, and the core concepts behind pension administration at Foundation and Level 2 depth — built for people who need the answer mid-task, not a full course.",
+  { name:"Visual Job Aids & Reference Sheets", domain:"ops", category:"resources",
+    cco:{ challenge:"People needed answers mid-task — not a full course — for a formula-driven calculator and pension fundamentals.",
+      contribution:"Built quick-reference sheets and a job aid explaining how to safely extend a formula-driven calculator.",
+      outcome:"Gave the team fast, self-serve answers that cut interruptions." },
     images:[
       { src: IMG_EXCEL_CALC, alt:"How to add tiers to an insurance calculator — job aid" },
       { src: IMG_PENSION_L1, alt:"Pension Foundation (Level 1) summary sheet" },
       { src: IMG_PENSION_L2, alt:"Pension Level 2 summary sheet" }
     ],
     links:[] },
-  { name:"Leadership 360 Profile", domain:"strat",
-    desc:"A survey-based tool comparing a leader's self-assessment against their team's evaluation of them, surfacing the gap between how leaders see themselves and how they're actually experienced by their teams.",
+  { name:"Leadership 360 Profile", domain:"strat", category:"leadership",
+    cco:{ challenge:"Leaders often don't know how their team actually experiences their leadership day to day.",
+      contribution:"Built a survey-based tool comparing a leader's self-assessment against their team's evaluation of them.",
+      outcome:"Leaders confront the gap directly — where self-perception and how they're experienced diverge — as a starting point for real development." },
     links:[
       { label:"Leadership Profile Demo", url:"https://userenablement.github.io/Portfolio/LeadershipProfileDemo/" }
     ] },
-  { name:"Remote Onboarding Framework", domain:"ops",
-    desc:"A full-lifecycle onboarding system for a fully remote organization — pre-boarding through 90-day review — built around a five-need psychological model rather than a task checklist, with role-specific stakeholder checklists, a Buddy/Guide peer-support structure, two longitudinal pulse surveys, and a dashboard design turning survey data into a prioritized action list.",
+  { name:"Remote Onboarding Framework", domain:"ops", category:"change", featured:true,
+    cco:{ challenge:"New hires at a fully remote company had no structured path from offer to 90 days, and managers lacked a consistent way to support them.",
+      contribution:"Designed a full-lifecycle onboarding system around a five-need psychological model, with stakeholder checklists, a Buddy/Guide structure, two pulse surveys, and a dashboard turning survey data into a prioritized action list.",
+      outcome:"100% survey completion and 90%+ new-hire satisfaction." },
     links:[
       { label:"Read the case study", url:"https://userenablement.github.io/Portfolio/OnboardingFramework/" }
+    ] },
+  { name:"Virtual Session Prep Guide", domain:"id", category:"sync",
+    cco:{ challenge:"Live virtual training loses time to tech troubleshooting and unclear expectations when participants arrive unprepared.",
+      contribution:"Designed a pre-course welcome and readiness guide — a technical checklist, embedded platform walkthrough videos, and clear behavioral expectations — sent ahead of a leadership development session.",
+      outcome:"Sessions opened focused on content, not logistics." },
+    links:[
+      { label:"View Prep Guide", url:"https://userenablement.github.io/Portfolio/PreCourseInformation/" }
+    ] },
+  { name:"Providing Constructive Feedback (BEER Model)", domain:"lead", category:"sync",
+    cco:{ challenge:"Managers defaulted to vague praise instead of specific, actionable feedback.",
+      contribution:"Designed a 60-minute discussion-led session built around the BEER model (Behaviour, Effect, Expectation, Resolution), with pre-work, practice, and a facilitator deck and participant workbook.",
+      outcome:"Participants left with feedback they'd actually drafted for a real situation, not just a framework they'd heard about." },
+    links:[
+      { label:"Session Outline & Resources", url:"https://userenablement.github.io/Portfolio/BeerFeedbackOutline/" }
     ] }
 ];
 
@@ -233,32 +299,49 @@ TESTIMONIALS.forEach(t=>{
   quoteCloud.appendChild(span);
 });
 
-/* work samples */
-const sampleGrid = document.getElementById("sampleGrid");
-SAMPLES.forEach(s=>{
-  const d = DOMAINS.find(x=>x.id===s.domain);
-  const el = document.createElement("div");
-  el.className = "sample-card";
-  el.style.setProperty("--dc", `var(${d.accent})`);
-  el.style.setProperty("--tint", `var(${d.soft})`);
-  const hasLinks = s.links && s.links.length;
-  const hasImages = s.images && s.images.length;
-  const linksHtml = hasLinks
-    ? s.links.map(l=>`<a class="sample-link" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join("")
-    : (hasImages ? "" : `<span class="sample-link-soon">Preview soon</span>`);
-  const thumbsHtml = hasImages
-    ? `<div class="sample-thumbs">${s.images.map(im=>`<div class="sample-thumb" data-full="${im.src}" data-alt="${im.alt}"><img src="${im.src}" alt="${im.alt}"></div>`).join("")}</div>`
-    : "";
-  el.innerHTML = `
-    <div class="sample-icon"><svg viewBox="0 0 22 22" fill="none" stroke-linecap="round" stroke-linejoin="round">${d.icon}</svg></div>
-    <div class="sample-top">
-      <span class="sample-tag">${d.label}</span>
-    </div>
-    <span class="sample-name">${s.name}</span>
-    <span class="sample-desc">${s.desc}</span>
-    ${thumbsHtml}
-    ${linksHtml ? `<div class="sample-links">${linksHtml}</div>` : ""}`;
-  sampleGrid.appendChild(el);
+/* work samples, grouped by category */
+const categoryList = document.getElementById("categoryList");
+CATEGORIES.forEach(cat=>{
+  const items = SAMPLES.filter(s=>s.category===cat.id);
+  if (!items.length) return;
+  const section = document.createElement("div");
+  section.className = "category";
+  const grid = document.createElement("div");
+  grid.className = "card-grid";
+  items.forEach(s=>{
+    const d = DOMAINS.find(x=>x.id===s.domain);
+    const el = document.createElement(s.comingSoon ? "div" : "div");
+    el.className = "sample-card" + (s.featured ? " featured" : "") + (s.comingSoon ? " coming-soon-card" : "");
+    el.style.setProperty("--dc", `var(${d.accent})`);
+    el.style.setProperty("--tint", `var(${d.soft})`);
+    const hasLinks = s.links && s.links.length;
+    const hasImages = s.images && s.images.length;
+    const linksHtml = hasLinks
+      ? s.links.map(l=>`<a class="sample-link" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join("")
+      : (hasImages || s.comingSoon ? "" : `<span class="sample-link-soon">Preview soon</span>`);
+    const thumbsHtml = hasImages
+      ? `<div class="sample-thumbs">${s.images.map(im=>`<div class="sample-thumb" data-full="${im.src}" data-alt="${im.alt}"><img src="${im.src}" alt="${im.alt}"></div>`).join("")}</div>`
+      : "";
+    const ccoHtml = `<div class="cco">
+      <span><b>Challenge:</b> ${s.cco.challenge}</span>
+      <span><b>Contribution:</b> ${s.cco.contribution}</span>
+      <span><b>Outcome:</b> ${s.cco.outcome}</span>
+    </div>`;
+    el.innerHTML = `
+      ${s.featured ? `<span class="featured-badge">Featured</span>` : ""}
+      <div class="sample-icon"><svg viewBox="0 0 22 22" fill="none" stroke-linecap="round" stroke-linejoin="round">${d.icon}</svg></div>
+      <div class="sample-top">
+        <span class="sample-tag">${d.label}</span>
+      </div>
+      <span class="sample-name">${s.name}</span>
+      ${ccoHtml}
+      ${thumbsHtml}
+      ${linksHtml ? `<div class="sample-links">${linksHtml}</div>` : ""}`;
+    grid.appendChild(el);
+  });
+  section.innerHTML = `<div class="category-head"><h3>${cat.label}</h3><p>${cat.intro}</p></div>`;
+  section.appendChild(grid);
+  categoryList.appendChild(section);
 });
 
 /* lightbox */
