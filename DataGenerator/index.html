@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<!--
+  Client Platform Admin Core Setup Generator — changelog
+  v8 (current): Added project codenames and icons to the four scenario cards, per instructional
+    designer request, so facilitators can see at a glance which Project Card (Blueprint Section
+    6.1) each generator scenario corresponds to. add-benefit-master -> 🦫 Project Beaver,
+    Part 1; add-benefit-plan -> 🦫 Project Beaver, Part 2; add-employer -> 🌳
+    Project Birch; enrol-member -> 🫎 Project Moose. Updated both the picker-list title
+    and the results-header title/icon for each scenario so branding is consistent throughout the
+    flow. No scenario logic, data shape, or employer-pool content changed.
+  v7: Fixed TPA/client name collision (Blueprint Section 6, Narrative Model item 3.4).
+    Removed "Maple North Industries" and "Maple Corner Markets" from the EMPLOYERS pool — both
+    contained "Maple," which risked confusion with the fictional TPA the learner works for,
+    "Maple North Benefits Group." Replaced with "Granite Ridge Industries" (GRI) and "Fraser
+    Corner Markets" (FCM). Cedar Valley Technologies intentionally left in the pool — its
+    resurfacing as generator flavor (not a taught or tracked scenario) is by design per the
+    Blueprint. No other employer-pool changes made; project-codename-adjacent names (Moose
+    Trail, Pine Fields, North Star Holdings, etc.) were reviewed and left as-is per guidance.
+  v6 and earlier: Northern Maple Canadian theme applied in place of the original Simpsons
+    theme; expanded employee classes (Executive, Student); roster capture/export added.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Platform Admin – Training Data Generator</title>
+<style>
+:root {
+  /* ── Brand Palette ── */
+  --navy-900: #0D2931;
+  --navy-800: #0F3743;
+  --navy-700: #144A5B;
+  --navy-600: #1D5F73;
+  --navy-500: #3191AF;
+  --navy-400: #37A9CB;
+  --navy-300: #5FC6E5;
+
+  --teal-700: #174538;
+  --teal-600: #256C58;
+  --teal-500: #2D846C;
+  --teal-400: #37A586;
+  --teal-300: #45BF9D;
+  --teal-200: #57E5BD;
+  --teal-100: #8CFFDF;
+
+  --grey-900: #252225;
+  --grey-700: #454145;
+  --grey-500: #696267;
+  --grey-300: #8E868C;
+  --grey-200: #B2ACB1;
+  --grey-100: #D7D4D7;
+  --grey-50:  #F1F0F1;
+
+  /* ── Semantic aliases ── */
+  --ink:          var(--navy-900);
+  --slate:        var(--navy-700);
+  --mist:         var(--navy-500);
+  --rule:         var(--grey-100);
+  --page:         #F4F6F8;
+  --white:        #FFFFFF;
+  --brand:        var(--navy-900);
+  --brand-mid:    var(--navy-600);
+  --brand-light:  #E0EDF2;
+  --accent:       var(--teal-300);
+  --accent-dark:  var(--teal-500);
+  --accent-light: #E0F7F2;
+
+  --warn:        #C47200;
+  --warn-light:  #FEF3CD;
+  --success:     var(--teal-500);
+  --success-light: #E0F7F2;
+  --skip-bg:     #EEF0F8;
+  --skip-border: var(--navy-500);
+  --skip-text:   var(--navy-800);
+
+  --radius: 6px;
+  --radius-lg: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.5; background: var(--page); color: var(--ink); }
+
+/* ── Header ── */
+header {
+  background: var(--navy-900);
+  color: var(--white);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(13,41,49,0.4);
+}
+
+/* Platform hexagon logo SVG inline */
+.header-logo-img { width: 34px; height: 34px; flex-shrink: 0; object-fit: contain; filter: brightness(0) invert(1); }
+
+.header-divider {
+  width: 1px; height: 28px;
+  background: rgba(255,255,255,0.18);
+  margin: 0 4px;
+}
+.header-product {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--teal-200); opacity: 0.85;
+}
+.header-title { font-size: 15px; font-weight: 600; color: white; margin-left: 2px; }
+.header-badge {
+  margin-left: auto;
+  font-size: 11px;
+  background: rgba(69,191,157,0.18);
+  border: 1px solid rgba(69,191,157,0.35);
+  border-radius: 20px;
+  padding: 3px 12px;
+  color: var(--teal-200);
+  font-weight: 600;
+}
+
+.container { max-width: 1080px; margin: 0 auto; padding: 28px 24px 80px; }
+
+/* ── Setup order banner ── */
+/* ── Roster panel ── */
+.roster-panel {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-left: 4px solid var(--teal-300);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.roster-left { display: flex; align-items: flex-start; gap: 12px; }
+.roster-icon { font-size: 20px; }
+.roster-title { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.roster-title span { font-weight: 500; color: var(--teal-500); }
+.roster-sub { font-size: 12px; color: var(--grey-500); margin-top: 2px; max-width: 480px; }
+.roster-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.setup-order {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+.setup-order h2 {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--grey-300); margin-bottom: 14px;
+}
+.order-steps { display: flex; align-items: stretch; }
+.order-step {
+  flex: 1; background: var(--page);
+  border: 1.5px solid var(--rule);
+  border-right: none; padding: 12px 14px;
+}
+.order-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.order-step:last-child { border-right: 1.5px solid var(--rule); border-radius: 0 var(--radius) var(--radius) 0; }
+.os-num { font-size: 10px; font-weight: 700; color: var(--grey-300); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.os-icon { font-size: 18px; margin-bottom: 4px; }
+.os-label { font-size: 12.5px; font-weight: 700; color: var(--navy-900); margin-bottom: 2px; }
+.os-sub { font-size: 11px; color: var(--grey-500); }
+.order-arrow { display: flex; align-items: center; padding: 0 6px; font-size: 16px; color: var(--grey-300); flex-shrink: 0; background: var(--white); }
+.setup-note {
+  margin-top: 12px; font-size: 12.5px; color: #7A4900;
+  background: var(--warn-light); border-left: 3px solid var(--warn);
+  border-radius: var(--radius); padding: 10px 14px;
+}
+
+/* ── Module tabs ── */
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-300); margin-bottom: 10px; }
+.module-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.module-tab {
+  border: 1.5px solid var(--rule); background: var(--white);
+  border-radius: 20px; padding: 6px 16px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  color: var(--slate); transition: all 0.15s;
+}
+.module-tab:hover { border-color: var(--brand-mid); color: var(--brand-mid); }
+.module-tab.active { background: var(--navy-900); border-color: var(--navy-900); color: var(--white); }
+
+/* ── Scenario cards ── */
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 10px; margin-bottom: 28px; }
+.scenario-card {
+  background: var(--white); border: 1.5px solid var(--rule);
+  border-radius: var(--radius-lg); padding: 14px 16px;
+  cursor: pointer; transition: all 0.15s;
+}
+.scenario-card:hover { border-color: var(--navy-600); box-shadow: 0 2px 10px rgba(13,41,49,0.1); }
+.scenario-card.active {
+  border-color: var(--teal-300);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(69,191,157,0.2);
+}
+.sc-icon { font-size: 20px; margin-bottom: 6px; }
+.sc-title { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.sc-desc { font-size: 12px; color: var(--grey-500); margin-bottom: 8px; }
+.sc-prereqs { display: flex; gap: 4px; flex-wrap: wrap; }
+.prereq-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.05em; border-radius: 20px; padding: 2px 8px; }
+.prereq-tag.needs { background: var(--warn-light); color: var(--warn); border: 1px solid #EBD0A0; }
+.prereq-tag.module { background: var(--accent-light); color: var(--teal-500); border: 1px solid rgba(69,191,157,0.4); }
+
+/* ── Data card shell ── */
+.data-card { background: var(--white); border: 1.5px solid var(--rule); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 2px 16px rgba(13,41,49,0.08); }
+
+.card-header {
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+  color: var(--white); padding: 18px 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.ch-icon { font-size: 22px; }
+.ch-title { font-size: 16px; font-weight: 700; }
+.ch-sub { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+.ch-accent-bar {
+  margin-left: auto; width: 4px; height: 40px;
+  background: var(--teal-300); border-radius: 2px; flex-shrink: 0;
+}
+
+.card-actions {
+  padding: 10px 24px; background: var(--grey-50);
+  border-bottom: 1px solid var(--rule);
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: none; border-radius: var(--radius);
+  padding: 7px 14px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-primary { background: var(--navy-900); color: var(--white); }
+.btn-primary:hover { background: var(--navy-700); }
+.btn-secondary { background: var(--white); color: var(--slate); border: 1.5px solid var(--rule); }
+.btn-secondary:hover { border-color: var(--brand-mid); color: var(--brand-mid); }
+.btn-roster { background: #4B2E83; color: var(--white); }
+.btn-roster:hover { background: #3A2166; }
+.btn-accent { background: var(--teal-400); color: var(--navy-900); font-weight: 700; }
+.btn-accent:hover { background: var(--teal-300); }
+.usage-hint { margin-left: auto; font-size: 11px; color: var(--grey-300); font-style: italic; }
+
+/* ── Prereq toggles ── */
+.prereq-section {
+  padding: 16px 24px;
+  background: #FFF8EC;
+  border-bottom: 2px solid #EBD0A0;
+}
+.prereq-section h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--warn); margin-bottom: 12px; }
+.prereq-toggles { display: flex; flex-direction: column; gap: 8px; }
+.prereq-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--white); border: 1px solid #EBD0A0;
+  border-radius: var(--radius); padding: 10px 14px; gap: 12px;
+}
+.pt-left { flex: 1; }
+.pt-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.pt-sub { font-size: 11px; color: var(--grey-500); margin-top: 2px; }
+.pt-toggle { display: flex; border: 1.5px solid var(--rule); border-radius: 20px; overflow: hidden; flex-shrink: 0; }
+.pt-option { padding: 5px 14px; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--white); color: var(--grey-300); border: none; transition: all 0.15s; }
+.pt-option.selected-yes { background: var(--teal-400); color: var(--navy-900); }
+.pt-option.selected-no { background: var(--warn); color: var(--white); }
+
+/* ── Section blocks ── */
+.card-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.section-block { border: 1.5px solid var(--rule); border-radius: var(--radius-lg); overflow: hidden; }
+.section-block.prereq-block { border-color: rgba(69,191,157,0.4); }
+.section-block.skipped { border-color: var(--grey-100); background: var(--grey-50); }
+.section-block.main-block { border-color: var(--teal-300); }
+
+.sb-header {
+  padding: 11px 16px; display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; cursor: pointer; user-select: none;
+}
+.sb-header.prereq-header { background: var(--accent-light); color: var(--teal-600); }
+.sb-header.skipped-header { background: var(--grey-50); color: var(--grey-300); }
+.sb-header.main-header { background: var(--navy-900); color: var(--white); }
+
+.sb-tag { margin-left: auto; font-size: 10px; border-radius: 20px; padding: 2px 10px; font-weight: 700; }
+.sb-tag.tag-prereq { background: rgba(69,191,157,0.2); color: var(--teal-600); }
+.sb-tag.tag-skip { background: var(--grey-100); color: var(--grey-500); }
+.sb-tag.tag-main { background: rgba(69,191,157,0.25); color: var(--teal-200); }
+.sb-toggle { font-size: 12px; opacity: 0.5; transition: transform 0.2s; }
+.sb-toggle.open { transform: rotate(180deg); }
+
+.sb-body { padding: 16px; }
+
+.skip-message { font-size: 13px; color: var(--slate); display: flex; gap: 10px; align-items: flex-start; }
+.skip-ref {
+  margin-top: 8px; font-size: 12px; background: white;
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 8px 12px; color: var(--slate);
+}
+.skip-ref strong { color: var(--navy-700); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── Field groups ── */
+.field-group { margin-bottom: 16px; }
+.field-group:last-child { margin-bottom: 0; }
+.fg-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--grey-300);
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; gap: 6px;
+}
+.fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 8px; }
+.fields.wide { grid-template-columns: 1fr; }
+
+.field-item {
+  background: var(--page); border: 1px solid var(--rule);
+  border-radius: var(--radius); padding: 9px 11px; position: relative;
+}
+.field-item.highlight {
+  background: var(--accent-light);
+  border-color: rgba(69,191,157,0.5);
+  border-left: 3px solid var(--teal-300);
+}
+.field-item.warn-field { background: var(--warn-light); border-color: #EBD0A0; }
+.fi-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--grey-300); margin-bottom: 2px; }
+.fi-value { font-size: 13.5px; font-weight: 600; color: var(--ink); word-break: break-word; }
+.fi-note { font-size: 11px; color: var(--grey-500); margin-top: 3px; font-style: italic; }
+.fi-copy { position: absolute; top: 7px; right: 7px; background: none; border: none; cursor: pointer; color: var(--grey-200); font-size: 11px; padding: 2px 4px; border-radius: 3px; opacity: 0; transition: opacity 0.15s; }
+.field-item:hover .fi-copy { opacity: 1; }
+.fi-copy:hover { background: var(--rule); color: var(--ink); }
+
+/* ── Callouts ── */
+.callout { border-radius: var(--radius); padding: 11px 14px; font-size: 12.5px; display: flex; gap: 10px; margin-bottom: 12px; }
+.callout.tip { background: var(--accent-light); border-left: 3px solid var(--teal-400); color: var(--teal-600); }
+.callout.info { background: var(--brand-light); border-left: 3px solid var(--brand-mid); color: var(--slate); }
+.callout.warn { background: var(--warn-light); border-left: 3px solid var(--warn); color: #7A4900; }
+
+/* ── Empty state ── */
+.empty-state { text-align: center; padding: 56px 24px; color: var(--grey-300); }
+.empty-state .es-icon { font-size: 44px; margin-bottom: 14px; }
+.empty-state h3 { font-size: 16px; color: var(--slate); margin-bottom: 8px; }
+.empty-state p { font-size: 13px; max-width: 360px; margin: 0 auto; color: var(--grey-500); }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-900); color: white; padding: 10px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(10px); transition: all 0.2s; z-index: 9999; pointer-events: none; border-left: 3px solid var(--teal-300); }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+@media print {
+  header, .setup-order, .picker-section, .card-actions, .prereq-section, .fi-copy { display: none !important; }
+  .data-card { box-shadow: none; }
+  body { background: white; }
+  .container { padding: 0; max-width: 100%; }
+  .sb-body { display: block !important; }
+  .section-block.skipped { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-product">Client Platform Admin</div>
+    <div class="header-title">Training Data Generator</div>
+  </div>
+  <span class="header-badge">Northern Maple Theme · v8</span>
+</header>
+
+<div class="container">
+
+  <!-- Setup Order -->
+  <div class="setup-order">
+    <h2>📋 Recommended setup order in Client Platform Admin</h2>
+    <div class="order-steps">
+      <div class="order-step">
+        <div class="os-num">Step 1</div>
+        <div class="os-icon">📊</div>
+        <div class="os-label">Benefits Master</div>
+        <div class="os-sub">Admin_06 — Create benefit records with rates and carrier details</div>
+      </div>
+      <div class="order-arrow">▶</div>
+      <div class="order-step">
+        <div class="os-num">Step 2</div>
+        <div class="os-icon">📦</div>
+        <div class="os-label">Benefit Plans</div>
+        <div class="os-sub">Admin_07 — Group benefits into a plan with waiting period rules</div>
+      </div>
+      <div class="order-arrow">▶</div>
+      <div class="order-step">
+        <div class="os-num">Step 3</div>
+        <div class="os-icon">🏢</div>
+        <div class="os-label">Employers</div>
+        <div class="os-sub">Admin_03 — Set up employer, assign classes and benefit plans</div>
+      </div>
+      <div class="order-arrow">▶</div>
+      <div class="order-step">
+        <div class="os-num">Step 4</div>
+        <div class="os-icon">👤</div>
+        <div class="os-label">Members</div>
+        <div class="os-sub">Admin_02 — Enrol employees and assign benefit coverage</div>
+      </div>
+    </div>
+    <div class="setup-note">⚠️ <strong>Client Platform Admin enforces this order.</strong> A benefit must exist in the Benefit Master before it can be added to a Benefit Plan. A Benefit Plan must exist before it can be assigned to an employer class. An employer and plan must exist before a member can be enrolled.</div>
+  </div>
+
+  <!-- Roster panel — captures members enrolled in this session for use in the Life Event Scenarios file -->
+  <div class="roster-panel">
+    <div class="roster-left">
+      <span class="roster-icon">🗂️</span>
+      <div>
+        <div class="roster-title">Member Roster <span id="roster-count">(0 saved)</span></div>
+        <div class="roster-sub">Save each member you enrol below, then download the roster — the Life Event Scenarios file needs it to work with real, already-enrolled people.</div>
+      </div>
+    </div>
+    <div class="roster-actions">
+      <button class="btn btn-secondary" onclick="document.getElementById('roster-file-input').click()">⬆️ Load existing roster</button>
+      <input type="file" id="roster-file-input" accept="application/json" style="display:none" onchange="loadRosterFile(event)">
+      <button class="btn btn-accent" onclick="downloadRoster()">⬇️ Download roster.json</button>
+    </div>
+  </div>
+
+  <!-- Scenario picker -->
+  <div class="picker-section">
+    <div class="section-label">Filter by module</div>
+    <div class="module-tabs">
+      <button class="module-tab active" onclick="filterModule('all',this)">All modules</button>
+      <button class="module-tab" onclick="filterModule('benefits',this)">Benefits (Admin_06)</button>
+      <button class="module-tab" onclick="filterModule('plans',this)">Benefit Plans (Admin_07)</button>
+      <button class="module-tab" onclick="filterModule('employers',this)">Employers (Admin_03)</button>
+      <button class="module-tab" onclick="filterModule('members',this)">Members (Admin_02)</button>
+    </div>
+    <div class="section-label">Choose a scenario</div>
+    <div class="scenario-grid" id="scenario-grid"></div>
+  </div>
+
+  <div id="output-area">
+    <div class="empty-state">
+      <div class="es-icon">🗂️</div>
+      <h3>No scenario selected yet</h3>
+      <p>Choose a scenario above. For scenarios with prerequisites, tell the tool what's already set up — it will show only the data you still need.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Data pools ───────────────────────────────────────────────────────────────
+// Core names pulled directly from the Northern Maple workbook (05_Members, 06_Dependents_Beneficiaries),
+// extended with additional names in the same fictional Canadian style for variety — same approach as
+// widening a generator's cast beyond a fixed source list.
+const FM = ['Aaron','Adam','Arthur','Colin','Daniel','Dylan','Ethan','Gabriel','Jacob','Liam','Lucas','Marcus','Martin','Nathan','Noah','Owen','Paul','Peter','Raj','Robert','Samuel','Sean','Victor',
+  'Benjamin','Michael','Ryan','Andrew','Kevin','Mark','Ravi','Amir','Wei','Luca','Connor','Jamal','Devon'];
+const FF = ['Amara','Ava','Claire','Ella','Emma','Isabelle','Julie','Monique','Natalie','Priya',
+  'Sophie','Chloe','Maya','Olivia','Grace','Nadia','Fatima','Mei','Charlotte','Aisha','Brianne'];
+const LN = ['Bennett','Bouchard','Brooks','Carter','Chen','Clarke','Foster','Gold','Hughes','Kowalski','Lawson','Mercer','Morin','Murphy','Okafor','Patel','Reed','Roy','Tremblay',
+  'Fontaine','Whitfield','Sinclair','Nguyen','Singh','Osei','Campbell','MacDonald','Fraser','Belanger'];
+const STREETS = ['Maple Grove Road','Beaver Pond Lane','Snow Goose Crescent','Great Lakes Boulevard','Aurora Court','North Star Avenue','Pine Ridge Drive','Moose Trail'];
+const POS_EXEC = ['CEO','Owner','Communications Consultant','Executive Assistant'];
+const POS_MGMT = ['Operations Supervisor','Police Chief','Principal','Practice Manager'];
+const POS_SAL  = ['Licensing Clerk','Records Clerk','Teacher','Physician','Admin Clerk'];
+const POS_HRLY = ['Safety Inspector','Contract Technician','Technician','Store Assistant'];
+const POS_PT   = ['Admin Assistant','Event Staff','Shift Manager','Volunteer Coordinator'];
+const POS_STU  = ['Music Tutor','Student Assistant','Student Crew Member'];
+
+// Employer pool. First entry is the flagship used most often; the rest are the other nine
+// fictional employers from 02_Employers in the workbook, plus a few more invented in the
+// same Canadian-theme style (per the workbook's own Read Me: maple, beaver, moose, geese,
+// northern lights, lakes, pines, North Star) for variety across training sessions.
+// NOTE: per Blueprint Section 6 (Narrative Model), this pool must never contain the word
+// "Maple" — that's reserved for the TPA name (Maple North Benefits Group) the learner works
+// for. A client employer sharing that name risks confusing which company is the TPA and
+// which is the client. Cedar Valley Technologies is intentionally kept here — see v7 changelog.
+const EMPLOYERS = [
+  {code:'GRI', name:'Granite Ridge Industries',       city:'Hamilton',      province:'ON'},
+  {code:'NCH', name:'North Star Holdings',            city:'Toronto',       province:'ON'},
+  {code:'FCM', name:'Fraser Corner Markets',          city:'Vancouver',     province:'BC'},
+  {code:'CRL', name:'Snow Goose Learning Centre',     city:'Ottawa',        province:'ON'},
+  {code:'HSH', name:'Goose Bay Hospitality Group',    city:'Halifax',       province:'NS'},
+  {code:'TNF', name:'True North Food Services',       city:'Winnipeg',      province:'MB'},
+  {code:'EOS', name:'Moose Trail Outfitters',         city:'Edmonton',      province:'AB'},
+  {code:'LMS', name:'Great Lakes Municipal Services', city:'Mississauga',   province:'ON'},
+  {code:'SHC', name:'Northern Pines Health Network',  city:'Calgary',       province:'AB'},
+  {code:'ADM', name:'Polar Peak Digital Studios',     city:'Montréal',      province:'QC'},
+  {code:'ABC', name:'Aurora Borealis Clinics',        city:'Yellowknife',   province:'NT'},
+  {code:'PFC', name:'Pine Fields Construction',       city:'Regina',        province:'SK'},
+  {code:'CVT', name:'Cedar Valley Technologies',      city:'Kitchener',     province:'ON'},
+];
+const MARITAL  = ['Single','Married','Common-Law','Single Parent'];
+const MONTHS   = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const CARRIERS = [
+  {code:'ASO', name:'Administrative Services Only'},
+  {code:'AIG', name:'American International Group'},
+  {code:'BXL', name:'BLUE CROSS LIFE'},
+  {code:'CLA', name:'Canada Life Assurance'},
+  {code:'CHB', name:'CHUBB'},
+  {code:'CLS', name:'ClaimSecure'},
+  {code:'COI', name:'Co-operators Insurance'},
+  {code:'DSJ', name:'Desjardins Insurance'},
+  {code:'DLG', name:'DIALOGUE'},
+  {code:'EML', name:'EmpireLife'},
+  {code:'GSC', name:'GREEN SHIELD CANADA'},
+  {code:'HWD', name:'HOMEWOOD'},
+  {code:'IAF', name:'iA Financial Group'},
+  {code:'LWC', name:'LIFEWORKS CANADA LTD'},
+  {code:'MBC', name:'Manitoba Blue Cross'},
+  {code:'MNL', name:'MANULIFE'},
+  {code:'MSP', name:'MSP'},
+  {code:'OCB', name:'OCIBP'},
+  {code:'PBC', name:'Pacific Bluecross'},
+  {code:'RBC', name:'Royal Bank of Canada'},
+  {code:'RSA', name:'RSA'},
+  {code:'SBC', name:'SASKATCHEWAN BLUE CROSS'},
+  {code:'SFI', name:'SELF-INSURED'},
+  {code:'SHP', name:'SHEPELL'},
+  {code:'SSQ', name:'SSQ'},
+  {code:'SUM', name:'Strategic Underwriting Managers Inc.'},
+  {code:'SLF', name:'Sun Life Financial'},
+  {code:'VNG', name:'VENNGO'},
+  {code:'WAW', name:'Wawanesa'},
+];
+const DEP_BENEFITS = ['Dental','Extended Health','Vision','Prescription Drugs'];
+const VOL_BENEFITS = ['Basic Life Insurance','Accidental Death & Dismemberment','Long Term Disability','Short Term Disability','Critical Illness'];
+const HYBRID_BENEFITS = ['Basic Life Insurance','Accidental Death & Dismemberment','Long Term Disability'];
+const AGE_BANDS = ['<30','30-39','40-49','50-59','60-64','65+'];
+
+// Sample (not exhaustive) age-banded rate rows — illustrates the age band / gender / smoker status
+// structure described in KB A2.7. A real Benefit Master record needs the full table entered.
+function genHybridRates() {
+  const combos = [
+    { ageBand: '<30',   gender: 'Male',   smoker: 'Non-Smoker' },
+    { ageBand: '<30',   gender: 'Female', smoker: 'Smoker' },
+    { ageBand: '60-64', gender: 'Male',   smoker: 'Smoker' },
+    { ageBand: '60-64', gender: 'Female', smoker: 'Non-Smoker' },
+  ];
+  return combos.map(c => {
+    const idx = AGE_BANDS.indexOf(c.ageBand);
+    let base = 0.05 + idx * 0.08 + (c.gender === 'Male' ? 0.02 : 0) + (c.smoker === 'Smoker' ? 0.15 : 0);
+    return { ...c, rate: base.toFixed(2) };
+  });
+}
+
+// ── Alphanumeric benefit code generator ─────────────────────────────────────
+// Matches typical Client Platform Admin patterns: 2-4 alpha prefix + 2-4 alphanumeric suffix
+// e.g. LIFE-A1, LTD-B2, DENT-2025, EHC-C01, CI-OPT1
+const VOWELS = 'AEIOU';
+const CONSONANTS = 'BCDFGHJKLMNPRSTV';
+const DIGITS = '0123456789';
+const ALPHANUM = 'ABCDEFGHJKLMNPRSTV0123456789';
+
+function randBenefitCode(group) {
+  // Build a 2-4 letter abbreviation from the group name
+  const words = group.replace(/[^A-Za-z ]/g,'').split(' ').filter(Boolean);
+  let prefix;
+  if (words.length === 1) {
+    prefix = words[0].slice(0,4).toUpperCase();
+  } else {
+    prefix = words.map(w => w[0].toUpperCase()).join('');
+    if (prefix.length < 2) prefix = words[0].slice(0,3).toUpperCase();
+  }
+
+  // Suffix: 1-2 alphanum chars + optional year last 2 digits or sequential number
+  const suffixStyle = rand(0,3);
+  let suffix;
+  if (suffixStyle === 0) suffix = String(rand(1,9)) + pick(ALPHANUM.slice(10)); // e.g. "1A"
+  else if (suffixStyle === 1) suffix = String(rand(25,26)) + String(rand(1,9)); // e.g. "251"
+  else if (suffixStyle === 2) suffix = pick('ABC') + String(rand(1,9)).padStart(2,'0'); // e.g. "A01"
+  else suffix = String(rand(1,99)).padStart(2,'0'); // e.g. "07"
+
+  return `${prefix}-${suffix}`;
+}
+
+// Real plan names/codes/waiting periods, from the Northern Maple 08_Benefit_Plans reference sheet.
+// Class C (Hourly) shares the FT-Regular plan with Class B (Salaried) — same as the source workbook,
+// which has no separate "Hourly" tier; hourly vs. salaried is a job-title distinction, not a plan one.
+const PLAN_TABLE = {
+  EX: { code:'Executive',   name:'Maple Gold Executive Plan',        waiting:0, waitOpt:'Immediate' },
+  A:  { code:'Management',  name:'Maple Silver Management Plan',     waiting:1, waitOpt:'First day of following month' },
+  B:  { code:'FT-Regular',  name:'Maple Core Full-Time Plan',        waiting:3, waitOpt:'First day of following month' },
+  C:  { code:'FT-Regular',  name:'Maple Core Full-Time Plan',        waiting:3, waitOpt:'First day of following month' },
+  D:  { code:'Part-Time',   name:'Beaver Choice Part-Time Plan',     waiting:6, waitOpt:'First day of following month' },
+  E:  { code:'Student',     name:'Northern Select Student Plan',     waiting:0, waitOpt:'Immediate' },
+};
+
+// ── Utility ──────────────────────────────────────────────────────────────────
+function pick(a) { return a[Math.floor(Math.random()*a.length)]; }
+function rand(lo,hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
+function fmtDate(d) { return `${String(d.getDate()).padStart(2,'0')}-${MONTHS[d.getMonth()]}-${d.getFullYear()}`; }
+function randDOB(mn,mx) { const y=new Date().getFullYear()-rand(mn,mx); return fmtDate(new Date(y,rand(0,11),rand(1,28))); }
+function randHire() { return fmtDate(new Date(rand(2019,2024),rand(0,11),rand(1,28))); }
+function randEff()  { return `01-${MONTHS[rand(0,11)]}-${rand(2022,2025)}`; }
+function randPhone(){ return `555-${rand(300,499)}-${rand(1000,9999)}`; }
+function randEmail(f,l,employerCode){ return `${f.toLowerCase()}.${l.toLowerCase()}@${(employerCode||'mni').toLowerCase()}.example`; }
+function randPostal(){ const L='ABCEGHJKLMNPRSTVXY'; return `T${rand(0,9)}${pick(L.split(''))} ${rand(0,9)}${pick(L.split(''))}${rand(0,9)}`; }
+function randName(g){ return { first: g==='Male'?pick(FM):pick(FF), last: pick(LN) }; }
+function randGender(){ return Math.random()>.5?'Male':'Female'; }
+function randPol(c){ return `${c}-${rand(10,99)}${pick('ABCDEFGHJK')}${rand(1000,9999)}`; }
+function randSalary(cls){
+  if(cls==='EX') return `$${(rand(150,300)*1000).toLocaleString()}`;
+  if(cls==='A') return `$${(rand(80,130)*1000).toLocaleString()}`;
+  if(cls==='B') return `$${(rand(55,85)*1000).toLocaleString()}`;
+  if(cls==='C') return `$${(rand(52,72)*1000).toLocaleString()}`;
+  if(cls==='E') return `$${(rand(18,28)*1000).toLocaleString()}`;
+  return `$${(rand(25,40)*1000).toLocaleString()}`;
+}
+function fmtWaiting(months){ return months>0 ? `${months} Month${months>1?'s':''}` : 'None — Immediate eligibility'; }
+function depTypeFromMarital(m){
+  if(m==='Single') return 'Single';
+  if(m==='Single Parent') return 'Single Parent';
+  return pick(['Couple','Family']);
+}
+
+// ── Shared seed ──────────────────────────────────────────────────────────────
+let SEED = {};
+function newSeed(classOverride) {
+  const g = randGender();
+  const {first,last} = randName(g);
+  const PLANS = [
+    {cls:'EX', clsName:'Executive',      positions:POS_EXEC},
+    {cls:'A',  clsName:'Management',     positions:POS_MGMT},
+    {cls:'B',  clsName:'Salaried',       positions:POS_SAL},
+    {cls:'C',  clsName:'Hourly',         positions:POS_HRLY},
+    {cls:'D',  clsName:'Part-Time',      positions:POS_PT},
+    {cls:'E',  clsName:'Student',        positions:POS_STU},
+  ];
+  const planBase = classOverride ? PLANS.find(p=>p.cls===classOverride) || pick(PLANS) : pick(PLANS);
+  const planTableEntry = PLAN_TABLE[planBase.cls];
+  const planCode = planTableEntry.code;
+  const planName = planTableEntry.name;
+
+  const carrier_vol = pick(CARRIERS);
+  const carrier_dep = pick(CARRIERS);
+  const carrier_hyb = pick(CARRIERS);
+  const bgroup_vol = pick(VOL_BENEFITS);
+  const bgroup_dep = pick(DEP_BENEFITS);
+  const bgroup_hyb = pick(HYBRID_BENEFITS);
+  const bcode_vol  = randBenefitCode(bgroup_vol);
+  const bcode_dep  = randBenefitCode(bgroup_dep);
+  const bcode_hyb  = randBenefitCode(bgroup_hyb);
+  const pol_vol    = randPol(carrier_vol.code);
+  const pol_dep    = randPol(carrier_dep.code);
+  const pol_hyb    = randPol(carrier_hyb.code);
+  const hybridRates = genHybridRates();
+  const bcode_vtry = randBenefitCode(bgroup_vol);
+  const pol_vtry    = randPol(carrier_vol.code);
+  const vtryAmount  = pick(['$25,000','$50,000','$75,000','$100,000']);
+  const effDate    = randEff();
+  const marital    = planBase.cls==='E' ? 'Single' : pick(MARITAL);
+  const depType    = depTypeFromMarital(marital);
+
+  const dobRange = { EX:[38,64], A:[28,55], B:[25,50], C:[22,50], D:[18,45], E:[18,23] }[planBase.cls] || [22,50];
+  const employer = pick(EMPLOYERS);
+
+  let dependents = [];
+  if (depType === 'Couple') {
+    const sp = randName(g==='Male'?'Female':'Male');
+    dependents = [{ first: sp.first, last: pick(LN), relationship: 'Spouse', dob: randDOB(25,55) }];
+  } else if (depType === 'Family') {
+    const sp = randName(g==='Male'?'Female':'Male');
+    const child = randName(randGender());
+    dependents = [
+      { first: sp.first, last: pick(LN), relationship: 'Spouse', dob: randDOB(25,55) },
+      { first: child.first, last, relationship: 'Child', dob: randDOB(1,20) },
+    ];
+  } else if (depType === 'Single Parent') {
+    const child = randName(randGender());
+    dependents = [{ first: child.first, last, relationship: 'Child', dob: randDOB(1,20) }];
+  }
+
+  SEED = {
+    g, first, last, dependents, employer,
+    plan: { ...planBase, code: planCode, name: planName, waiting: planTableEntry.waiting, waitOpt: planTableEntry.waitOpt },
+    carrier_vol, carrier_dep, carrier_hyb,
+    bgroup_vol, bgroup_dep, bgroup_hyb,
+    bcode_vol, bcode_dep, bcode_hyb,
+    pol_vol, pol_dep, pol_hyb,
+    hybridRates,
+    bcode_vtry, pol_vtry, vtryAmount,
+    effDate, marital, depType,
+    salary:   randSalary(planBase.cls),
+    position: pick(planBase.positions),
+    dob:      randDOB(dobRange[0], dobRange[1]),
+    hireDate: randHire(),
+    address:  `${rand(100,999)} ${pick(STREETS)}`,
+    phone:    randPhone(),
+    email:    randEmail(first, last, employer.code),
+    postal:   randPostal(),
+    empNum:   String(rand(10100,19999)),
+    singleRate: rand(28,50), coupleRate: rand(60,110),
+    famRate:    rand(90,150), spRate:     rand(52,90),
+    adminAdd:   rand(4,10),
+    volNEM:     rand(150,300)*1000, volMax: rand(300,500)*1000,
+    volCarrierRate: (rand(40,200)/100).toFixed(2),
+    volAdminRate:   (rand(10,50)/100).toFixed(2),
+  };
+}
+
+// ── Block generators ─────────────────────────────────────────────────────────
+function genBenefitMasterBlock(mode) {
+  mode = mode || 'single';
+  const isSalaryBased = !['Critical Illness','Accidental Death & Dismemberment'].includes(SEED.bgroup_vol);
+  const groups = [
+      {
+        title: `Volume-based benefit · ${SEED.bgroup_vol}`,
+        icon: '📊',
+        callout: {type:'info', text:'Navigate: + Add Benefit. After clicking Create, scroll down to enter the default rates shown below before leaving this screen.'},
+        fields: [
+          {l:'Benefit Code',           v:SEED.bcode_vol,      h:true, n:'Letters and numbers — must be unique across the Benefit Master'},
+          {l:'Description',            v:`${SEED.bgroup_vol} — Standard Schedule`},
+          {l:'Benefit Group',          v:SEED.bgroup_vol,     h:true},
+          {l:'Primary Benefit Type',   v:'Volume',            n:'Auto-set by Benefit Group selection'},
+          {l:'Coverage Type',          v:'Core'},
+          {l:'Secondary Benefit Type', v:'Leave blank',       n:'Only set for hybrid age-based benefits'},
+          {l:'Show Coverage Amount',   v:'Yes'},
+          {l:'First Nation',           v:'Any'},
+          {l:'Effective Date',         v:SEED.effDate,        h:true, n:'Must be on or before the Benefit Plan effective date'},
+          {l:'Carrier',                v:SEED.carrier_vol.name, h:true},
+          {l:'Policy Number',          v:SEED.pol_vol},
+          {l:'Send to Carrier',        v:'Yes'},
+          {l:'Employer %',             v: SEED.bgroup_vol.includes('Disability')?'0%':'100%'},
+          {l:'Employee %',             v: SEED.bgroup_vol.includes('Disability')?'100%':'0%'},
+          {l:'Jurisdiction',           v:'All of Canada'},
+          {l:'Volume Option',          v: isSalaryBased?'Salary Based':'Flat Based'},
+          {l: isSalaryBased?'Times of Annual Salary':'Flat Coverage Amount',
+                                       v: isSalaryBased?'200 (= 2× salary)':`$${(rand(25,200)*1000).toLocaleString()}`,
+                                       n:'Enter this in the Default Rates section after clicking Create'},
+          {l:'NEM',                    v:`$${SEED.volNEM.toLocaleString()}`, n:'Maximum without medical evidence'},
+          {l:'Maximum Coverage',       v:`$${SEED.volMax.toLocaleString()}`},
+          {l:'Carrier Rate',           v:`$${SEED.volCarrierRate} per $1,000`},
+          {l:'Admin Rate',             v:`$${SEED.volAdminRate} per $1,000`},
+          {l:'Agent Rate',             v:'$0.00'},
+        ]
+      },
+  ];
+
+  if (mode === 'all') {
+    groups.push({
+      title: `Hybrid (age-based) benefit · ${SEED.bgroup_hyb}`,
+      icon: '📈',
+      callout: {type:'info', text:'A hybrid benefit prices coverage from an age-banded rate table instead of a single flat or salary-based rate. Enter every age band / gender / smoker-status row shown below in the Default Rates section after clicking Create — this is a sample, not the full table.'},
+      fields: [
+        {l:'Benefit Code',           v:SEED.bcode_hyb, h:true, n:'Letters and numbers — must be unique across the Benefit Master'},
+        {l:'Description',            v:`${SEED.bgroup_hyb} — Age-Banded Schedule`},
+        {l:'Benefit Group',          v:SEED.bgroup_hyb, h:true},
+        {l:'Primary Benefit Type',   v:'Volume'},
+        {l:'Secondary Benefit Type', v:'Hybrid (Age-Based)', h:true, n:'This is what distinguishes a hybrid benefit from a standard Volume benefit'},
+        {l:'Effective Date',         v:SEED.effDate, h:true},
+        {l:'Carrier',                v:SEED.carrier_hyb.name, h:true},
+        {l:'Policy Number',          v:SEED.pol_hyb},
+        ...SEED.hybridRates.map(r => ({
+          l: `Rate — ${r.ageBand} · ${r.gender} · ${r.smoker}`,
+          v: `$${r.rate} per $1,000`,
+        })),
+      ]
+    });
+  }
+
+  groups.push(
+      {
+        title: `Dependent-based benefit · ${SEED.bgroup_dep}`,
+        icon: '👨‍👩‍👧‍👦',
+        callout: null,
+        fields: [
+          {l:'Benefit Code',          v:SEED.bcode_dep, h:true, n:'Letters and numbers — must be unique across the Benefit Master'},
+          {l:'Description',           v:`${SEED.bgroup_dep} — Standard Plan`},
+          {l:'Benefit Group',         v:SEED.bgroup_dep, h:true},
+          {l:'Primary Benefit Type',  v:'Dependent'},
+          {l:'Show Coverage Amount',  v:'No', n:'No dollar amount for dependent-type benefits'},
+          {l:'Effective Date',        v:SEED.effDate, h:true},
+          {l:'Carrier',               v:SEED.carrier_dep.name},
+          {l:'Policy Number',         v:SEED.pol_dep},
+          {l:'Employer %',            v:'80%'},
+          {l:'Employee %',            v:'20%'},
+          {l:'Jurisdiction',          v:'All of Canada'},
+          {l:'Single — Total Rate',   v:`$${SEED.singleRate+SEED.adminAdd}.00/month`, h:true, n:`Carrier: $${SEED.singleRate} · Admin: $${SEED.adminAdd}`},
+          {l:'Couple — Total Rate',   v:`$${SEED.coupleRate+SEED.adminAdd}.00/month`, h:true},
+          {l:'Family — Total Rate',   v:`$${SEED.famRate+SEED.adminAdd}.00/month`, h:true},
+          {l:'Single Parent — Rate',  v:`$${SEED.spRate+SEED.adminAdd}.00/month`, h:true},
+        ]
+      }
+  );
+
+  if (mode === 'all') {
+    groups.push({
+      title: `Voluntary (optional) benefit · ${SEED.bgroup_vol} — Optional Top-Up`,
+      icon: '🧩',
+      callout: {type:'note', text:"Optional benefits aren't entered for individual members here. Once this benefit is added to a Benefit Plan as Optional (Admin_07), a member who opts in is added manually on their Health and Benefit Details page — the Voluntary Benefits region — where the TPA selects the benefit, enters the effective date and coverage amount, and the platform calculates the premium."},
+      fields: [
+        {l:'Benefit Code',           v:SEED.bcode_vtry, h:true},
+        {l:'Description',            v:`${SEED.bgroup_vol} — Optional Top-Up`},
+        {l:'Benefit Group',          v:SEED.bgroup_vol, h:true},
+        {l:'Primary Benefit Type',   v:'Volume'},
+        {l:'Coverage Type',          v:'Optional', h:true, n:'Core benefits auto-apply to every member; Optional benefits require the member to opt in first'},
+        {l:'Effective Date',         v:SEED.effDate, h:true},
+        {l:'Carrier',                v:SEED.carrier_vol.name, h:true},
+        {l:'Policy Number',          v:SEED.pol_vtry},
+      ]
+    });
+  }
+
+  return {
+    heading: '① Benefit Master — Plan Administration → Benefits Management → VIEW BENEFITS MASTER',
+    groups
+  };
+}
+
+function genBenefitPlanBlock() {
+  return {
+    heading: `② Benefit Plan — Plan Administration → Benefits Management → CREATE BENEFIT PLAN`,
+    groups: [
+      {
+        title: `Benefit Plan: ${SEED.plan.name}`,
+        icon: '📦',
+        callout: {type:'tip', text:`After clicking Create, the Benefit Plan Record opens automatically. Use the Add New Benefit panel on the right to add ${SEED.bcode_vol} (Volume) and ${SEED.bcode_dep} (Dependent) to this plan.`},
+        fields: [
+          {l:'Code',            v:SEED.plan.code, h:true},
+          {l:'Name',            v:SEED.plan.name, h:true},
+          {l:'First Nation',    v:'Any'},
+          {l:'Type',            v:'Standard'},
+          {l:'Active',          v:'Yes'},
+          {l:'Waiting Period',  v:fmtWaiting(SEED.plan.waiting), h:true, w:SEED.plan.waiting>1},
+          {l:'Waiting Option',  v:SEED.plan.waitOpt, h:true},
+          {l:'Add after creation', v:`${SEED.bcode_vol} · ${SEED.bcode_dep}`, h:true, n:'Use the Benefit Plan Record → Add New Benefit panel'},
+        ]
+      }
+    ]
+  };
+}
+
+function genEmployerBlock() {
+  return {
+    heading: `③ Employer — Employers module → ADD EMPLOYER`,
+    groups: [
+      {
+        title: 'Employer Setup',
+        icon: '🏢',
+        callout: {type:'warn', text:`Select Regular on Step 1. On Step 3, assign Class ${SEED.plan.cls} (${SEED.plan.clsName}) and link it to plan ${SEED.plan.code}.`},
+        fields: [
+          {l:'Employer Code',           v:SEED.employer.code, h:true, n:`Use existing ${SEED.employer.name} employer or create a division`},
+          {l:'Employer Name',           v:SEED.employer.name},
+          {l:'Effective Date',          v:SEED.effDate, h:true, n:'Members cannot be enrolled with dates earlier than this'},
+          {l:'Class to assign',         v:`${SEED.plan.cls} — ${SEED.plan.clsName}`, h:true},
+          {l:'Benefit Plan for class',  v:SEED.plan.code, h:true},
+        ]
+      }
+    ]
+  };
+}
+
+function genMemberBlock() {
+  return {
+    heading:'④ Member Enrolment — 9-step wizard',
+    groups:[
+      { title:'Step 1 — Personal Details', icon:'🪪',
+        callout:{type:'tip', text:'Start from the Employer Detail page → All Employees → Add Member so the Current Employer field is pre-filled automatically.'},
+        fields:[
+          {l:'First Name',       v:SEED.first,   h:true},
+          {l:'Last Name',        v:SEED.last,    h:true},
+          {l:'Gender',           v:SEED.g},
+          {l:'Date of Birth',    v:SEED.dob,     n:'Format: DD-MON-YYYY'},
+          {l:'Address',          v:SEED.address},
+          {l:'City',             v:SEED.employer.city},
+          {l:'Province',         v:SEED.employer.province},
+          {l:'Postal Code',      v:SEED.postal},
+          {l:'Email',            v:SEED.email},
+          {l:'Phone',            v:SEED.phone},
+          {l:'Marital Status',   v:SEED.marital},
+          {l:'First Nation',     v:'No'},
+        ]},
+      { title:'Step 2 — Banking Details', icon:'🏦',
+        callout:null,
+        fields:[{l:'Required?', v:'No — skip this step', h:true, n:'Only required for direct-billing members (retirees, continuation). Standard employer-sponsored members pay via payroll deduction.'}]},
+      { title:'Step 3 — Member ID Mapping', icon:'🔗',
+        callout:null,
+        fields:[
+          {l:'Mapping Entity',  v:'Certificate Number'},
+          {l:'Mapping Name',    v:SEED.carrier_vol.name},
+          {l:'Mapping Value',   v:`${SEED.carrier_vol.code}-${rand(100000,999999)}`},
+          {l:'Effective Date',  v:SEED.effDate},
+        ]},
+      { title:'Step 4 — Employment Details', icon:'💼',
+        callout:null,
+        fields:[
+          {l:'Current Employer', v:`${SEED.employer.name} (${SEED.employer.code})`, h:true},
+          {l:'Employee Number',  v:SEED.empNum},
+          {l:'Position',         v:SEED.position},
+          {l:'Hire Date',        v:SEED.hireDate, h:true, n:'Waiting period calculated from this date'},
+          {l:'Annual Salary',    v:SEED.salary, h:true, n:'Drives Life and LTD coverage amounts'},
+          {l:'Smoker',           v:'No'},
+        ]},
+      { title:'Step 5 — Class & Benefit Plans', icon:'📋',
+        callout:null,
+        fields:[
+          {l:'Class',           v:`${SEED.plan.cls} — ${SEED.plan.clsName}`, h:true},
+          {l:'Benefit Plan',    v:SEED.plan.name, h:true},
+          {l:'Plan Code',       v:SEED.plan.code},
+          {l:'Waiting Period',  v:fmtWaiting(SEED.plan.waiting), w:SEED.plan.waiting>1},
+          {l:'Waiting Option',  v:SEED.plan.waitOpt},
+        ]},
+      { title:'Step 6 — Benefits Selection', icon:'✅',
+        callout:{type:'info', text:`These benefits must exist in the Benefit Master and in plan ${SEED.plan.code}. If they do not appear, confirm the benefit effective date is on or before the employer effective date.`},
+        fields:[
+          {l:`${SEED.bcode_vol} — ${SEED.bgroup_vol}`, v:'Include — Core', h:true},
+          {l:`${SEED.bcode_dep} — ${SEED.bgroup_dep}`, v:`Include — Dependent Type: ${SEED.depType}`, h:true},
+        ]},
+      { title:'Steps 7–9 — Beneficiaries, Family & Review', icon:'👨‍👩‍👧',
+        callout:null,
+        fields:[
+          {l:'Primary Beneficiary', v: SEED.dependents.length ? `${SEED.dependents[0].first} ${SEED.dependents[0].last}` : `${SEED.marital!=='Single'?pick(FF):pick(FM)} ${SEED.last}`},
+          {l:'Relationship',        v: SEED.dependents.length ? SEED.dependents[0].relationship : 'Parent'},
+          {l:'Percentage',          v:'100%'},
+          ...SEED.dependents.map(d => ({l:`Dependent — ${d.relationship}`, v:`${d.first} ${d.last} (DOB ${d.dob})`, h:true})),
+          {l:'Dependent Type',      v:SEED.depType, n:`Rate tier for ${SEED.bgroup_dep}`},
+          {l:'Review & Confirm',    v:'Verify all details, then click Submit'},
+        ]},
+      { title:'After enrolment — Voluntary Benefit Opt-In', icon:'🧩',
+        callout:{type:'note', text:'This is a separate action, not part of the 9-step wizard. From Member Details, click the blue tick (✓) on the Plan Summary row to open Health and Benefit Details, then go to the Voluntary Benefits region.'},
+        fields:[
+          {l:'Optional Benefit',   v:`${SEED.bcode_vtry} — ${SEED.bgroup_vol} — Optional Top-Up`, h:true, n:'Only appears here once added to the Benefit Plan with Coverage Type: Optional'},
+          {l:'Effective Date',     v:SEED.effDate},
+          {l:'Coverage Amount',    v:SEED.vtryAmount, h:true},
+          {l:'Premium',            v:'Calculated automatically by the platform from the coverage amount and rate table', n:'No manual entry — click Create and the platform computes it'},
+        ]},
+    ]
+  };
+}
+
+// ── Scenario definitions ─────────────────────────────────────────────────────
+const SCENARIOS = [
+  {
+    id:'add-benefit-master', module:'benefits', icon:'🦫',
+    title:'🦫 Project Beaver, Part 1 — Add a Benefit to the Benefit Master',
+    desc:'Volume, hybrid (age-based), dependent, and voluntary records — toggle which types to include',
+    userGuide:'Admin_06 → 6.4 & 6.5', prereqIds:[],
+    generate() {
+      newSeed();
+      return { title:'🦫 Project Beaver, Part 1 — Add Benefits to the Benefit Master', icon:'🦫',
+        subtitle:'Admin_06 → Plan Administration → Benefits Management → VIEW BENEFITS MASTER',
+        prereqs:[], main: genBenefitMasterBlock(benefitMasterMode) };
+    }
+  },
+  {
+    id:'add-benefit-plan', module:'plans', icon:'🦫',
+    title:'🦫 Project Beaver, Part 2 — Create a Benefit Plan',
+    desc:'New plan record — benefits must already exist in the Benefit Master',
+    userGuide:'Admin_07 → 7.3', prereqIds:['benefit_master'],
+    generate() {
+      newSeed();
+      return { title:'🦫 Project Beaver, Part 2 — Create a Benefit Plan', icon:'🦫',
+        subtitle:'Admin_07 → Plan Administration → Benefits Management → CREATE BENEFIT PLAN',
+        prereqs: getPrereqs('add-benefit-plan').map(p=>({...p, data:p.genFn()})),
+        main: genBenefitPlanBlock() };
+    }
+  },
+  {
+    id:'add-employer', module:'employers', icon:'🌳',
+    title:'🌳 Project Birch — Set Up an Employer',
+    desc:'5-step wizard — Benefit Plans must exist to assign to employer classes',
+    userGuide:'Admin_03 → 3.2', prereqIds:['benefit_master','benefit_plan'],
+    generate() {
+      newSeed();
+      return { title:'🌳 Project Birch — Setup New Employer', icon:'🌳',
+        subtitle:'Admin_03 → Employers module → ADD EMPLOYER',
+        prereqs: getPrereqs('add-employer').map(p=>({...p, data:p.genFn()})),
+        main: genEmployerBlock() };
+    }
+  },
+  {
+    id:'enrol-member', module:'members', icon:'🫎',
+    title:'🫎 Project Moose — Enrol a New Member',
+    desc:'9-step wizard — pick an employee class, or leave it random',
+    userGuide:'Admin_02 → 2.3', prereqIds:['benefit_master','benefit_plan','employer'],
+    generate() {
+      newSeed(employeeClassMode==='random'?null:employeeClassMode);
+      return { title:'🫎 Project Moose — Enrol New Member', icon:'🫎',
+        subtitle:`Admin_02 · ${SEED.plan.clsName} · ${SEED.plan.name}`,
+        prereqs: getPrereqs('enrol-member').map(p=>({...p, data:p.genFn()})),
+        main: genMemberBlock() };
+    }
+  },
+];
+
+// ── Prereq registry ──────────────────────────────────────────────────────────
+const PREREQ_DEFS = {
+  benefit_master: { id:'benefit_master', label:'Benefit Master records exist', sub:'Admin_06 → Plan Administration → Benefits Management → VIEW BENEFITS MASTER', genFn: genBenefitMasterBlock },
+  benefit_plan:   { id:'benefit_plan',   label:'Benefit Plan exists',          sub:'Admin_07 → Plan Administration → Benefits Management → Benefit Plans',       genFn: genBenefitPlanBlock },
+  employer:       { id:'employer',       label:'Employer record exists',        sub:'Admin_03 → Employers module',                                                genFn: genEmployerBlock },
+};
+const PREREQ_MAP = { 'add-benefit-plan':['benefit_master'], 'add-employer':['benefit_master','benefit_plan'], 'enrol-member':['benefit_master','benefit_plan','employer'] };
+function getPrereqs(sid) { return (PREREQ_MAP[sid]||[]).map(k=>({...PREREQ_DEFS[k]})); }
+
+// ── State ────────────────────────────────────────────────────────────────────
+let activeModule='all', activeScenario=null, currentOutputData=null;
+let prereqStatus={}, openSections={};
+let benefitMasterMode='single'; // 'single' | 'all' — used only by the add-benefit-master scenario
+let employeeClassMode='random'; // 'random' | 'EX' | 'A' | 'B' | 'C' | 'D' | 'E' — used by the enrol-member scenario
+
+function setBenefitMasterMode(mode) {
+  benefitMasterMode = mode;
+  if (currentOutputData && activeScenario === 'add-benefit-master') {
+    currentOutputData.main = genBenefitMasterBlock(benefitMasterMode);
+    renderOutput();
+  }
+}
+
+function setEmployeeClassMode(mode) {
+  employeeClassMode = mode;
+  if (currentOutputData && activeScenario === 'enrol-member') {
+    const sc = SCENARIOS.find(s=>s.id===activeScenario);
+    currentOutputData = sc.generate();
+    renderOutput();
+  }
+}
+
+// ── Scenario picker ──────────────────────────────────────────────────────────
+function filterModule(mod,el) {
+  activeModule=mod;
+  document.querySelectorAll('.module-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderScenarios();
+}
+function renderScenarios() {
+  const list = activeModule==='all'?SCENARIOS:SCENARIOS.filter(s=>s.module===activeModule);
+  document.getElementById('scenario-grid').innerHTML = list.map(s=>`
+    <div class="scenario-card ${activeScenario===s.id?'active':''}" onclick="selectScenario('${s.id}')">
+      <div class="sc-icon">${s.icon}</div>
+      <div class="sc-title">${s.title}</div>
+      <div class="sc-desc">${s.desc}</div>
+      <div class="sc-prereqs">
+        <span class="prereq-tag module">${s.userGuide}</span>
+        ${s.prereqIds.length?`<span class="prereq-tag needs">Needs ${s.prereqIds.length} prerequisite${s.prereqIds.length>1?'s':''}</span>`:''}
+      </div>
+    </div>`).join('');
+}
+function selectScenario(id) {
+  activeScenario=id; renderScenarios();
+  const sc=SCENARIOS.find(s=>s.id===id);
+  currentOutputData=sc.generate();
+  prereqStatus={}; openSections={};
+  sc.prereqIds.forEach(pid=>prereqStatus[pid]=null);
+  renderOutput();
+}
+
+// ── Output renderer ──────────────────────────────────────────────────────────
+function renderOutput() {
+  if(!currentOutputData) return;
+  const d=currentOutputData;
+  const sc=SCENARIOS.find(s=>s.id===activeScenario);
+
+  let prereqToggleHTML='';
+  if(d.prereqs&&d.prereqs.length) {
+    prereqToggleHTML=`<div class="prereq-section">
+      <h3>⚠️ Before you start — tell us what's already in place:</h3>
+      <div class="prereq-toggles">${d.prereqs.map(p=>`
+        <div class="prereq-toggle">
+          <div class="pt-left">
+            <div class="pt-label">${p.label}</div>
+            <div class="pt-sub">${p.sub}</div>
+          </div>
+          <div class="pt-toggle">
+            <button class="pt-option ${prereqStatus[p.id]==='yes'?'selected-yes':''}" onclick="setPrereq('${p.id}','yes')">✓ Already set up</button>
+            <button class="pt-option ${prereqStatus[p.id]==='no'?'selected-no':''}" onclick="setPrereq('${p.id}','no')">✗ I need this data</button>
+          </div>
+        </div>`).join('')}
+      </div></div>`;
+  }
+
+  let benefitModeToggleHTML='';
+  if (activeScenario === 'add-benefit-master') {
+    benefitModeToggleHTML = `<div class="prereq-section">
+      <h3>Benefit types to include</h3>
+      <div class="module-tabs" style="margin-bottom:0;">
+        <div class="module-tab ${benefitMasterMode==='single'?'active':''}" onclick="setBenefitMasterMode('single')">Single (Volume + Dependent)</div>
+        <div class="module-tab ${benefitMasterMode==='all'?'active':''}" onclick="setBenefitMasterMode('all')">All types (Volume, Hybrid, Dependent, Voluntary)</div>
+      </div>
+    </div>`;
+  }
+
+  let classToggleHTML='';
+  if (activeScenario === 'enrol-member') {
+    const classOptions = [
+      {v:'random', label:'Random'}, {v:'EX', label:'Executive'}, {v:'A', label:'Management'},
+      {v:'B', label:'Salaried'}, {v:'C', label:'Hourly'}, {v:'D', label:'Part-Time'}, {v:'E', label:'Student'},
+    ];
+    classToggleHTML = `<div class="prereq-section">
+      <h3>Employee class to demonstrate</h3>
+      <div class="module-tabs" style="margin-bottom:0;">
+        ${classOptions.map(c=>`<div class="module-tab ${employeeClassMode===c.v?'active':''}" onclick="setEmployeeClassMode('${c.v}')">${c.label}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  let blocksHTML='';
+  if(d.prereqs&&d.prereqs.length) {
+    d.prereqs.forEach(p=>{
+      const st=prereqStatus[p.id];
+      if(st===null) return;
+      blocksHTML += st==='yes' ? renderSkippedBlock(p) : renderDataBlock(p.data,'prereq');
+    });
+  }
+  const allAnswered=!d.prereqs.length||d.prereqs.every(p=>prereqStatus[p.id]!==null);
+  if(allAnswered) blocksHTML+=renderDataBlock(d.main,'main');
+  else if(d.prereqs.length) blocksHTML+=`<div style="padding:20px;text-align:center;color:var(--grey-300);font-size:13px;">Answer the questions above to see your data card.</div>`;
+
+  document.getElementById('output-area').innerHTML=`
+    <div class="data-card">
+      <div class="card-header">
+        <span class="ch-icon">${d.icon}</span>
+        <div><div class="ch-title">${d.title}</div><div class="ch-sub">${d.subtitle}</div></div>
+        <div class="ch-accent-bar"></div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-primary" onclick="regenerate()">🔄 Regenerate</button>
+        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+        <button class="btn btn-accent" onclick="downloadTXT()">⬇️ Download .txt</button>
+        ${activeScenario==='enrol-member' ? `<button class="btn btn-roster" onclick="addToRoster()">➕ Save this member to roster</button>` : ''}
+        <span class="usage-hint">Click any field to copy its value</span>
+      </div>
+      ${benefitModeToggleHTML}
+      ${classToggleHTML}
+      ${prereqToggleHTML}
+      <div class="card-body">${blocksHTML}</div>
+    </div>`;
+}
+
+function renderSkippedBlock(prereq) {
+  const key='skip-'+prereq.id, open=openSections[key]!==false;
+  return `<div class="section-block skipped">
+    <div class="sb-header skipped-header" onclick="toggleSection('${key}')">
+      <span>✓ Skipped — ${prereq.label}</span>
+      <span class="sb-tag tag-skip">Already set up</span>
+      <span class="sb-toggle ${open?'open':''}">▾</span>
+    </div>
+    ${open?`<div class="sb-body"><div class="skip-message"><span>✅</span><div>These records are already in Client Platform Admin — no data card needed for this step.<div class="skip-ref"><strong>Where to find them</strong>${prereq.sub}</div></div></div></div>`:''}
+  </div>`;
+}
+
+function renderDataBlock(blockData, type) {
+  const key=type+'-block', open=openSections[key]!==false;
+  const hClass=type==='main'?'main-header':'prereq-header';
+  const tClass=type==='main'?'tag-main':'tag-prereq';
+  const bClass=type==='main'?'main-block':'prereq-block';
+  const tagTxt=type==='main'?'Your task':'Prerequisite';
+  const groupsHTML=blockData.groups.map(g=>`
+    <div class="field-group">
+      <div class="fg-title"><span>${g.icon}</span>${g.title}</div>
+      ${g.callout?`<div class="callout ${g.callout.type}"><span>${g.callout.type==='tip'?'💡':g.callout.type==='warn'?'⚠️':'ℹ️'}</span><span>${g.callout.text}</span></div>`:''}
+      <div class="fields ${g.fields.length<=2?'wide':''}">
+        ${g.fields.map(f=>`<div class="field-item ${f.h?'highlight':''} ${f.w?'warn-field':''}">
+          <div class="fi-label">${f.l}</div>
+          <div class="fi-value">${f.v}</div>
+          ${f.n?`<div class="fi-note">${f.n}</div>`:''}
+          <button class="fi-copy" onclick="copyVal(event,'${f.v.replace(/['"]/g,'')}')">📋</button>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+  return `<div class="section-block ${bClass}">
+    <div class="sb-header ${hClass}" onclick="toggleSection('${key}')">
+      <span>${blockData.heading}</span>
+      <span class="sb-tag ${tClass}">${tagTxt}</span>
+      <span class="sb-toggle ${open?'open':''}">▾</span>
+    </div>
+    ${open?`<div class="sb-body">${groupsHTML}</div>`:''}
+  </div>`;
+}
+
+function toggleSection(key) { openSections[key]=openSections[key]===false; renderOutput(); }
+function setPrereq(id,val) { prereqStatus[id]=val; renderOutput(); }
+function regenerate() { selectScenario(activeScenario); }
+
+// ── Roster capture — feeds the Life Event Scenarios file ────────────────────
+// This is the only bridge between the two files: nothing is shared automatically
+// (no shared browser storage assumed), so the roster travels as a plain JSON file
+// the trainer downloads here and re-imports in the other file, session to session.
+let ROSTER = [];
+
+function updateRosterCount() {
+  const el = document.getElementById('roster-count');
+  if (el) el.textContent = `(${ROSTER.length} saved)`;
+}
+
+function addToRoster() {
+  if (activeScenario !== 'enrol-member' || !SEED.empNum) return;
+  if (ROSTER.some(m => m.empNum === SEED.empNum)) {
+    showToast('Already on the roster: ' + SEED.first + ' ' + SEED.last);
+    return;
+  }
+  ROSTER.push({
+    empNum: SEED.empNum,
+    first: SEED.first, last: SEED.last, gender: SEED.g,
+    dob: SEED.dob, hireDate: SEED.hireDate, position: SEED.position,
+    salary: SEED.salary, marital: SEED.marital, depType: SEED.depType,
+    dependents: JSON.parse(JSON.stringify(SEED.dependents)),
+    class: { cls: SEED.plan.cls, clsName: SEED.plan.clsName, code: SEED.plan.code, name: SEED.plan.name, waiting: SEED.plan.waiting, waitOpt: SEED.plan.waitOpt },
+    benefits: {
+      vol: { code: SEED.bcode_vol, group: SEED.bgroup_vol, carrier: SEED.carrier_vol.name },
+      dep: { code: SEED.bcode_dep, group: SEED.bgroup_dep, carrier: SEED.carrier_dep.name },
+    },
+    employer: `${SEED.employer.name} (${SEED.employer.code})`,
+    status: 'Active',
+    history: [],
+    createdAt: new Date().toISOString(),
+  });
+  updateRosterCount();
+  showToast('Saved to roster: ' + SEED.first + ' ' + SEED.last);
+}
+
+function downloadRoster() {
+  if (!ROSTER.length) { showToast('Roster is empty — enrol and save a member first'); return; }
+  const payload = { version: 1, source: 'Client Platform Admin Training Data Generator', exportedAt: new Date().toISOString(), members: ROSTER };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'}));
+  a.download = `oliver-training-roster-${Date.now()}.json`;
+  a.click();
+  showToast('Roster downloaded — save it somewhere you can find it next session');
+}
+
+function loadRosterFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const incoming = Array.isArray(data.members) ? data.members : [];
+      let added = 0;
+      incoming.forEach(m => {
+        if (m.empNum && !ROSTER.some(r => r.empNum === m.empNum)) { ROSTER.push(m); added++; }
+      });
+      updateRosterCount();
+      showToast(`Loaded roster — added ${added} member${added===1?'':'s'}`);
+    } catch (e) {
+      showToast('Could not read that file — is it a roster JSON from this tool?');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function copyVal(e,v) {
+  e.stopPropagation();
+  navigator.clipboard.writeText(v).then(()=>showToast('Copied: '+v));
+}
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function downloadTXT() {
+  if(!currentOutputData) return;
+  const d=currentOutputData;
+  let txt=`${d.title}\n${'='.repeat(60)}\n${d.subtitle}\n\n`;
+  const blocks=[];
+  if(d.prereqs) d.prereqs.forEach(p=>{
+    const st=prereqStatus[p.id];
+    if(st==='no') blocks.push(p.data);
+    else if(st==='yes') txt+=`[SKIPPED] ${p.label} — already set up in Client Platform Admin\n\n`;
+  });
+  blocks.push(d.main);
+  blocks.forEach(b=>{
+    txt+=`${b.heading}\n${'-'.repeat(60)}\n`;
+    b.groups.forEach(g=>{
+      txt+=`\n  ${g.title}\n`;
+      g.fields.forEach(f=>{ txt+=`    ${f.l}: ${f.v}\n`; if(f.n) txt+=`      (${f.n})\n`; });
+    });
+    txt+='\n';
+  });
+  txt+=`\nClient Platform Admin Training Data Generator · Northern Maple Theme · v8`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
+  a.download=`oliver-training-${activeScenario}-${Date.now()}.txt`;
+  a.click();
+  showToast('Downloaded!');
+}
+
+renderScenarios();
+</script>
+</body>
+</html>
