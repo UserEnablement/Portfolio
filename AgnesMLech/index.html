@@ -36,7 +36,7 @@
     --cv-ops:#D98A1E;     --cv-ops-soft:#FBF0DE;
     --cv-strat:#8B4FD1;   --cv-strat-soft:#F2E9FB;
 
-    --feature:var(--cv-strat); --feature-deep:#6B2FB0; --feature-soft:var(--cv-strat-soft);
+    --feature:#9C2E8B; --feature-deep:#6F2063; --feature-soft:#FBEAF7;
 
     --radius:18px;
     --radius-sm:12px;
@@ -118,7 +118,7 @@
     transition:transform .15s, box-shadow .15s;
   }
   .sample-card:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
-  .sample-card.featured{border:1px solid rgba(92,42,79,.35); box-shadow:0 8px 22px rgba(92,42,79,.14); background:linear-gradient(180deg, var(--feature-soft), var(--tint) 55%);}
+  .sample-card.featured{border:1px solid rgba(156,46,139,.35); box-shadow:0 8px 22px rgba(156,46,139,.14); background:linear-gradient(180deg, var(--feature-soft), var(--tint) 55%);}
   @media (min-width:1160px){.sample-card.featured{grid-column:span 2;}}
   .featured-badge{display:inline-block; font-family:var(--mono); font-size:.58rem; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:#fff; background:linear-gradient(120deg, var(--feature), var(--feature-deep)); border-radius:20px; padding:3px 9px; margin-bottom:8px; width:fit-content;}
   .cco{font-size:.78rem; color:var(--ink); line-height:1.48; display:flex; flex-direction:column; gap:4px; margin-bottom:10px;}
@@ -249,12 +249,13 @@ const SAMPLES = [
       { label:"Simulation", url:"https://userenablement.github.io/Product/Admin01GettingStarted/" },
       { label:"Full Course", url:"https://userenablement.github.io/Portfolio/GettingStarted/" }
     ] },
-  { name:"Group Benefits Client Onboarding — Session 1", domain:"id", tags:["Product & Onboarding","Synchronous","Facilitator Guide"],
+  { name:"Group Benefits Client Onboarding — Session 1", domain:"id", tags:["Product & Onboarding","Synchronous","Facilitator Guide","Tool"],
     cco:{ challenge:"New admins had to go from first login to a correct live build, on a complex platform.",
-      contribution:"90-minute facilitator session — live demo, benefit-model concepts, one hands-on build — with full script and 28-slide deck.",
+      contribution:"90-minute facilitator session — live demo, benefit-model concepts, one hands-on build — with full script and 28-slide deck, plus a custom data-generation tool giving learners realistic, collision-safe practice data without touching the live platform.",
       outcome:"Learners leave having correctly built a live entry, not watched one demoed." },
     links:[
-      { label:"Facilitator Guide", url:"https://userenablement.github.io/Portfolio/ClientPlatformTraining/" }
+      { label:"Facilitator Guide", url:"https://userenablement.github.io/Portfolio/ClientPlatformTraining/" },
+      { label:"Training Data Generator", url:"https://userenablement.github.io/Portfolio/DataGenerator/" }
     ] },
   { name:"ADKAR Leadership Initiative — Level 1 & 2", domain:"lead", tags:["Change & Adoption","Leadership & Performance","eLearning"],
     cco:{ challenge:"Leaders knew ADKAR in theory but struggled to diagnose which piece was behind real underperformance.",
